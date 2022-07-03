@@ -1,0 +1,29 @@
+types:
+    Vector:
+        x: int
+        y: int
+    Ball:
+        position: Vector
+        velocity: Vector
+        radius: int
+    Player:
+        id: UserId
+        lives: int
+        yPosition: int
+        height: int
+    PlayerState:
+        Players: Player[]
+        Balls: Ball[]
+
+methods:
+    updatePlayerPosition:
+        yPosition: int
+
+auth:
+    anonymous: {}
+
+userState: PlayerState
+
+error: string
+
+tick: 50
