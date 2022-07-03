@@ -1,30 +1,48 @@
 import { Methods, Context } from './.hathora/methods';
 import { Response } from '../api/base';
-import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IUpdatePlayerPositionRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest } from '../api/types';
+import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest, GameStates, IUpdatePlayerVelocityRequest } from '../api/types';
 
 type InternalState = PlayerState;
+const screenHeight = 400;
+const screenWidth = 600;
+const firstPlayerX = 15;
+const secondPlayerX = 575;
 
 export class Impl implements Methods<InternalState> {
     initialize(ctx: Context, request: IInitializeRequest): InternalState {
         return {
             Players: [],
             Balls: [],
+            gameState: GameStates.PlayersJoining,
         };
     }
 
     startGame(state: PlayerState, userId: string, ctx: Context, request: IStartGameRequest): Response {
         if (state.Players.length != 2) return Response.error('Invalid number of players');
+        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to stat game');
+        //create first ball
+        state.Balls.push({
+            position: { x: 25, y: 12.5 },
+            velocity: { x: 0, y: 0 },
+            radius: 15,
+        });
+
+        //update Gamestate
+        state.gameState = GameStates.WaitingToStartRound;
         return Response.ok();
     }
 
     joinGame(state: PlayerState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
+        if (state.gameState != GameStates.PlayersJoining) return Response.error('Cannot allow players to join');
         if (state.Players.length >= 2) return Response.error('This game has maximum amount of players');
         state.Players.push({
             id: userId,
             lives: 3,
-            yPosition: 0,
-            height: 25,
+            velocity: { x: 0, y: 0 },
+            position: { x: 0, y: 0 },
+            size: { x: 10, y: 25 },
         });
+        if (state.Players.length == 2) state.gameState = GameStates.WaitingToStartGame;
         return Response.ok();
     }
 
@@ -32,16 +50,16 @@ export class Impl implements Methods<InternalState> {
         throw new Error('Method not implemented.');
     }
 
-    updatePlayerPosition(state: InternalState, userId: UserId, ctx: Context, request: IUpdatePlayerPositionRequest): Response {
-        //find player index, there are only two, so if not 0, then 1
+    updatePlayerVelocity(state: PlayerState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
         let pIndex = 0;
         if (state.Players[1]) {
             if (userId == state.Players[1].id) pIndex = 1;
         }
 
-        state.Players[pIndex].height = request.yPosition;
+        state.Players[pIndex].velocity = request.velocity;
         return Response.ok();
     }
+
     getUserState(state: InternalState, userId: UserId): PlayerState {
         return state;
     }

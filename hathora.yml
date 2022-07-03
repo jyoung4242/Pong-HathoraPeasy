@@ -16,15 +16,17 @@ types:
     Player:
         id: UserId
         lives: int
-        yPosition: int
-        height: int
+        position: Vector
+        size: Vector
+        velocity: Vector
     PlayerState:
         Players: Player[]
         Balls: Ball[]
+        gameState: GameStates
 
 methods:
-    updatePlayerPosition:
-        yPosition: int
+    updatePlayerVelocity:
+        velocity: Vector
     startRound:
     joinGame:
     startGame:
