@@ -18,6 +18,8 @@ types:
 methods:
     updatePlayerPosition:
         yPosition: int
+    joinGame:
+    startGame:
 
 auth:
     anonymous: {}
