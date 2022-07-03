@@ -13,15 +13,30 @@ export class Impl implements Methods<InternalState> {
     }
 
     startGame(state: PlayerState, userId: string, ctx: Context, request: IStartGameRequest): Response {
-        throw new Error('Method not implemented.');
+        if (state.Players.length != 2) return Response.error('Invalid number of players');
+        return Response.ok();
     }
 
     joinGame(state: PlayerState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
-        throw new Error('Method not implemented.');
+        if (state.Players.length >= 2) return Response.error('This game has maximum amount of players');
+        state.Players.push({
+            id: userId,
+            lives: 3,
+            yPosition: 0,
+            height: 25,
+        });
+        return Response.ok();
     }
 
     updatePlayerPosition(state: InternalState, userId: UserId, ctx: Context, request: IUpdatePlayerPositionRequest): Response {
-        return Response.error('Not implemented');
+        //find player index, there are only two, so if not 0, then 1
+        let pIndex = 0;
+        if (state.Players[1]) {
+            if (userId == state.Players[1].id) pIndex = 1;
+        }
+
+        state.Players[pIndex].height = request.yPosition;
+        return Response.ok();
     }
     getUserState(state: InternalState, userId: UserId): PlayerState {
         return state;
