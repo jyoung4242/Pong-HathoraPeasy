@@ -1,6 +1,6 @@
 import { Methods, Context } from './.hathora/methods';
 import { Response } from '../api/base';
-import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IUpdatePlayerPositionRequest, IJoinGameRequest, IStartGameRequest } from '../api/types';
+import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IUpdatePlayerPositionRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest } from '../api/types';
 
 type InternalState = PlayerState;
 
@@ -26,6 +26,10 @@ export class Impl implements Methods<InternalState> {
             height: 25,
         });
         return Response.ok();
+    }
+
+    startRound(state: PlayerState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
+        throw new Error('Method not implemented.');
     }
 
     updatePlayerPosition(state: InternalState, userId: UserId, ctx: Context, request: IUpdatePlayerPositionRequest): Response {
