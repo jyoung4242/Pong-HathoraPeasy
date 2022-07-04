@@ -13,12 +13,14 @@ types:
         position: Vector
         velocity: Vector
         radius: int
+        isColliding: boolean
     Player:
         id: UserId
         lives: int
         position: Vector
         size: Vector
         velocity: Vector
+        isColliding: boolean
     PlayerState:
         Players: Player[]
         Balls: Ball[]

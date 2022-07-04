@@ -19,12 +19,13 @@ export class Impl implements Methods<InternalState> {
 
     startGame(state: PlayerState, userId: string, ctx: Context, request: IStartGameRequest): Response {
         if (state.Players.length != 2) return Response.error('Invalid number of players');
-        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to stat game');
+        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to staRt game');
         //create first ball
         state.Balls.push({
-            position: { x: 25, y: 12.5 },
+            position: { x: 24, y: 12 },
             velocity: { x: 0, y: 0 },
             radius: 15,
+            isColliding: false,
         });
 
         //update Gamestate
@@ -40,7 +41,8 @@ export class Impl implements Methods<InternalState> {
             lives: 3,
             velocity: { x: 0, y: 0 },
             position: { x: 0, y: 0 },
-            size: { x: 10, y: 25 },
+            size: { x: 10, y: 24 },
+            isColliding: false,
         });
         if (state.Players.length == 2) state.gameState = GameStates.WaitingToStartGame;
         return Response.ok();
@@ -63,5 +65,19 @@ export class Impl implements Methods<InternalState> {
     getUserState(state: InternalState, userId: UserId): PlayerState {
         return state;
     }
-    onTick(state: InternalState, ctx: Context, timeDelta: number): void {}
+
+    onTick(state: InternalState, ctx: Context, timeDelta: number): void {
+        for (const player of state.Players) {
+            player.position.y += Math.floor(player.velocity.y * timeDelta);
+        }
+        if (state.gameState == GameStates.InProgress) {
+            //set each ball movement
+            for (const ball of state.Balls) {
+                ball.position.x += Math.floor(ball.velocity.x * timeDelta);
+                ball.position.y += Math.floor(ball.velocity.y * timeDelta);
+            }
+
+            //check for collisions with players
+        }
+    }
 }
