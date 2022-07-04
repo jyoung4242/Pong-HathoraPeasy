@@ -1,1 +1,81 @@
-/*style.css*/ 
+/*style.css*/
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.flex {
+    display: flex;
+}
+
+.small_width {
+    width: 15%;
+}
+
+.medium_width {
+    width: 25%;
+}
+
+.large_width {
+    width: 60%;
+}
+
+.spacedEqual {
+    justify-content: space-around;
+    align-items: center;
+}
+
+.startLeft {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+input {
+    height: 30px;
+}
+
+.button {
+    background-color: #224887;
+    border: 1px solid #224887;
+    color: white;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 15px;
+}
+
+label {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 50px;
+}
+
+.button:hover {
+    background-color: white;
+    color: #224887;
+}
+
+.gameArea {
+    background-color: #000000;
+    width: 600px;
+    height: 400px;
+    margin-top: 15px;
+    margin-left: 15px;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.instructions {
+    margin: 15px;
+    font-family: Arial;
+    font-size: x-large;
+    font-weight: bold;
+    color: #224887;
+}
