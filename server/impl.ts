@@ -51,6 +51,9 @@ export class Impl implements Methods<InternalState> {
     }
 
     startRound(state: PlayerState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
+        //gaurd conditions
+        if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
+
         //set starting angle, by which side your on
         //if left side, angle will be between
         let startingAngle: number;
