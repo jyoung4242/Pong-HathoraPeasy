@@ -1,12 +1,14 @@
 import { Methods, Context } from './.hathora/methods';
 import { Response } from '../api/base';
 import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest, GameStates, IUpdatePlayerVelocityRequest } from '../api/types';
+import { changeVelocity, detectCollisions, resetGame, toRads } from './helper';
 
 type InternalState = PlayerState;
-const screenHeight = 400;
+export const screenHeight = 400;
 const screenWidth = 600;
 const firstPlayerX = 15;
 const secondPlayerX = 575;
+const ballSpeed = 20;
 
 export class Impl implements Methods<InternalState> {
     initialize(ctx: Context, request: IInitializeRequest): InternalState {
@@ -49,7 +51,18 @@ export class Impl implements Methods<InternalState> {
     }
 
     startRound(state: PlayerState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
-        throw new Error('Method not implemented.');
+        //set starting angle, by which side your on
+        //if left side, angle will be between
+        let startingAngle: number;
+        if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -89, max: 89 });
+        else startingAngle = ctx.chance.integer({ min: 91, max: 269 });
+        let magnitude: number = ballSpeed;
+
+        let xComponent = Math.floor(magnitude * Math.cos(toRads(startingAngle)));
+        let yComponent = Math.floor(magnitude * Math.sin(toRads(startingAngle)));
+        state.Balls[0].velocity = { x: xComponent, y: yComponent };
+        state.gameState = GameStates.InProgress;
+        return Response.ok();
     }
 
     updatePlayerVelocity(state: PlayerState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
@@ -67,9 +80,15 @@ export class Impl implements Methods<InternalState> {
     }
 
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {
+        //player movement
         for (const player of state.Players) {
-            player.position.y += Math.floor(player.velocity.y * timeDelta);
+            //check for players being at 'top' and 'bottom of screen
+            const hittingTop = player.position.y - player.size.y <= 0;
+            const hittingBottom = player.position.y >= screenHeight;
+            if (!hittingTop && !hittingBottom) player.position.y += Math.floor(player.velocity.y * timeDelta);
         }
+
+        //ball movement
         if (state.gameState == GameStates.InProgress) {
             //set each ball movement
             for (const ball of state.Balls) {
@@ -78,6 +97,52 @@ export class Impl implements Methods<InternalState> {
             }
 
             //check for collisions with players
+            detectCollisions(state);
+
+            for (const player of state.Players) {
+                if (player.isColliding) {
+                    for (const ball of state.Balls) {
+                        if (ball.isColliding) {
+                            //depending on player, change balls velocity accordingly
+                            changeVelocity(ball, player);
+                        }
+                    }
+                }
+            }
+
+            //check for players being at 'top' and 'bottom of screen
+            for (const ball of state.Balls) {
+                const hittingTop = ball.position.y - ball.radius <= 0;
+                const hittingBottom = ball.position.y + ball.radius >= screenHeight;
+                if (hittingTop) {
+                    //updateVelocity
+                    changeVelocity(ball, 'top');
+                } else if (hittingBottom) {
+                    //updateVelocity
+                    changeVelocity(ball, 'bottom');
+                }
+            }
+
+            //check for ball leaving screen on left/right
+            for (const ball of state.Balls) {
+                const hittingLeft = ball.position.y - ball.radius <= 0;
+                const hittingRight = ball.position.y + ball.radius >= screenHeight;
+                if (hittingLeft) {
+                    //player left decrement lives
+                    state.Players[0].lives -= 1;
+                    //if lives 0, game over
+                    if (state.Players[0].lives == 0) state.gameState = GameStates.GameOver;
+                    //else, reset game
+                    resetGame(state, 'left');
+                } else if (hittingRight) {
+                    //player right decrement lives
+                    state.Players[1].lives -= 1;
+                    //if lives 0 game over
+                    if (state.Players[1].lives == 0) state.gameState = GameStates.GameOver;
+                    //else reset game
+                    resetGame(state, 'right');
+                }
+            }
         }
     }
 }

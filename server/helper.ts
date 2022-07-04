@@ -1,4 +1,5 @@
-import { PlayerState } from '../api/types';
+import { Ball, GameStates, Player, PlayerState, Vector } from '../api/types';
+import { screenHeight } from './impl';
 
 export function detectCollisions(state: PlayerState) {
     let obj1;
@@ -30,4 +31,38 @@ function rectIntersect(x1: number, y1: number, w1: number, h1: number, x2: numbe
         return false;
     }
     return true;
+}
+
+export function resetGame(state: PlayerState, side: 'left' | 'right') {
+    state.Balls.length = 0;
+    //create first ball
+
+    let startPosition;
+    if (side == 'left') startPosition = 24;
+    else startPosition = 572 - 12;
+
+    state.Balls.push({
+        position: { x: startPosition, y: 12 },
+        velocity: { x: 0, y: 0 },
+        radius: 15,
+        isColliding: false,
+    });
+
+    //update Gamestate
+    state.gameState = GameStates.WaitingToStartRound;
+}
+
+export function changeVelocity(obj1: Ball, obj2: 'top' | 'bottom' | Player) {
+    //top or bottom
+    if (obj2 == 'top' || obj2 == 'bottom') {
+        obj1.velocity.y = -obj1.velocity.y;
+    } else {
+        obj1.velocity.x = -obj1.velocity.x;
+        obj2.isColliding = false;
+    }
+    obj1.isColliding = false;
+}
+
+export function toRads(anl: number): number {
+    return (anl * Math.PI) / 180;
 }
