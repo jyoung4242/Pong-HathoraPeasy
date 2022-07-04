@@ -38,14 +38,20 @@ export class Impl implements Methods<InternalState> {
     joinGame(state: PlayerState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
         if (state.gameState != GameStates.PlayersJoining) return Response.error('Cannot allow players to join');
         if (state.Players.length >= 2) return Response.error('This game has maximum amount of players');
+        let startingposition: number;
+
+        if (state.Players.length == 1) startingposition = secondPlayerX;
+        else startingposition = firstPlayerX;
+
         state.Players.push({
             id: userId,
             lives: 3,
             velocity: { x: 0, y: 0 },
-            position: { x: 0, y: 0 },
+            position: { x: startingposition, y: 0 },
             size: { x: 10, y: 24 },
             isColliding: false,
         });
+
         if (state.Players.length == 2) state.gameState = GameStates.WaitingToStartGame;
         return Response.ok();
     }
@@ -116,7 +122,7 @@ export class Impl implements Methods<InternalState> {
                 }
             }
 
-            //check for players being at 'top' and 'bottom of screen
+            //check for balls being at 'top' and 'bottom of screen
             for (const ball of state.Balls) {
                 const hittingTop = ball.position.y - ball.radius <= 0;
                 const hittingBottom = ball.position.y + ball.radius >= screenHeight;
