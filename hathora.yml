@@ -7,8 +7,8 @@ types:
         - InProgress
         - GameOver
     Vector:
-        x: int
-        y: int
+        x: float
+        y: float
     Ball:
         position: Vector
         velocity: Vector

@@ -21,12 +21,12 @@ export class Impl implements Methods<InternalState> {
 
     startGame(state: PlayerState, userId: string, ctx: Context, request: IStartGameRequest): Response {
         if (state.Players.length != 2) return Response.error('Invalid number of players');
-        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to staRt game');
+        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
         //create first ball
         state.Balls.push({
             position: { x: 24, y: 12 },
             velocity: { x: 0, y: 0 },
-            radius: 15,
+            radius: 10,
             isColliding: false,
         });
 
@@ -60,10 +60,11 @@ export class Impl implements Methods<InternalState> {
         if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -89, max: 89 });
         else startingAngle = ctx.chance.integer({ min: 91, max: 269 });
         let magnitude: number = ballSpeed;
-
-        let xComponent = Math.floor(magnitude * Math.cos(toRads(startingAngle)));
-        let yComponent = Math.floor(magnitude * Math.sin(toRads(startingAngle)));
+        console.log(`starting angle: `, startingAngle);
+        let xComponent = magnitude * Math.cos(toRads(startingAngle));
+        let yComponent = magnitude * Math.sin(toRads(startingAngle));
         state.Balls[0].velocity = { x: xComponent, y: yComponent };
+        console.log('changing gamestate');
         state.gameState = GameStates.InProgress;
         return Response.ok();
     }
@@ -84,19 +85,20 @@ export class Impl implements Methods<InternalState> {
 
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {
         //player movement
+
         for (const player of state.Players) {
             //check for players being at 'top' and 'bottom of screen
             const hittingTop = player.position.y - player.size.y <= 0;
             const hittingBottom = player.position.y >= screenHeight;
-            if (!hittingTop && !hittingBottom) player.position.y += Math.floor(player.velocity.y * timeDelta);
+            if (!hittingTop && !hittingBottom) player.position.y += player.velocity.y * timeDelta;
         }
 
         //ball movement
         if (state.gameState == GameStates.InProgress) {
             //set each ball movement
             for (const ball of state.Balls) {
-                ball.position.x += Math.floor(ball.velocity.x * timeDelta);
-                ball.position.y += Math.floor(ball.velocity.y * timeDelta);
+                ball.position.x += ball.velocity.x * timeDelta;
+                ball.position.y += ball.velocity.y * timeDelta;
             }
 
             //check for collisions with players
@@ -104,6 +106,7 @@ export class Impl implements Methods<InternalState> {
 
             for (const player of state.Players) {
                 if (player.isColliding) {
+                    console.log(`hit player`);
                     for (const ball of state.Balls) {
                         if (ball.isColliding) {
                             //depending on player, change balls velocity accordingly
@@ -118,19 +121,22 @@ export class Impl implements Methods<InternalState> {
                 const hittingTop = ball.position.y - ball.radius <= 0;
                 const hittingBottom = ball.position.y + ball.radius >= screenHeight;
                 if (hittingTop) {
+                    console.log('hit top');
                     //updateVelocity
                     changeVelocity(ball, 'top');
                 } else if (hittingBottom) {
                     //updateVelocity
+                    console.log(`hit bottom`);
                     changeVelocity(ball, 'bottom');
                 }
             }
 
             //check for ball leaving screen on left/right
             for (const ball of state.Balls) {
-                const hittingLeft = ball.position.y - ball.radius <= 0;
-                const hittingRight = ball.position.y + ball.radius >= screenHeight;
+                const hittingLeft = ball.position.x - ball.radius <= 0;
+                const hittingRight = ball.position.x + ball.radius >= screenHeight;
                 if (hittingLeft) {
+                    console.log(`hit left side`);
                     //player left decrement lives
                     state.Players[0].lives -= 1;
                     //if lives 0, game over
@@ -138,6 +144,7 @@ export class Impl implements Methods<InternalState> {
                     //else, reset game
                     resetGame(state, 'left');
                 } else if (hittingRight) {
+                    console.log(`hit right side`);
                     //player right decrement lives
                     state.Players[1].lives -= 1;
                     //if lives 0 game over

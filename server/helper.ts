@@ -34,6 +34,7 @@ function rectIntersect(x1: number, y1: number, w1: number, h1: number, x2: numbe
 }
 
 export function resetGame(state: PlayerState, side: 'left' | 'right') {
+    console.log('resetting game');
     state.Balls.length = 0;
     //create first ball
 
@@ -54,7 +55,9 @@ export function resetGame(state: PlayerState, side: 'left' | 'right') {
 
 export function changeVelocity(obj1: Ball, obj2: 'top' | 'bottom' | Player) {
     //top or bottom
-    if (obj2 == 'top' || obj2 == 'bottom') {
+    if (obj2 == 'top') {
+        obj1.velocity.y = Math.abs(obj1.velocity.y);
+    } else if (obj2 == 'bottom') {
         obj1.velocity.y = -obj1.velocity.y;
     } else {
         obj1.velocity.x = -obj1.velocity.x;
