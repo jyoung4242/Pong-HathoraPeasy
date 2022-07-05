@@ -13,9 +13,9 @@ export function detectCollisions(state: ServerState) {
     // Start checking for collisions
     for (let i = 0; i < state.Balls.length; i++) {
         obj1 = state.Balls[i];
-        for (let j = i + 1; j < state.Players.length; j++) {
+        for (let j = i; j < state.Players.length; j++) {
             obj2 = state.Players[j];
-
+            console.log(`checking for collision`);
             // Compare object1 with object2
             if (rectIntersect(obj1.position.x, obj1.position.y, obj1.radius, obj1.radius, obj2.position.x, obj2.position.y, obj2.size.x, obj2.size.y)) {
                 console.log(`player collision`);

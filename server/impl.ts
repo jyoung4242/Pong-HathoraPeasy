@@ -72,8 +72,8 @@ export class Impl implements Methods<InternalState> {
         //set starting angle, by which side your on
         //if left side, angle will be between
         let startingAngle: number;
-        if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -89, max: 89 });
-        else startingAngle = ctx.chance.integer({ min: 91, max: 269 });
+        if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -75, max: 75 });
+        else startingAngle = ctx.chance.integer({ min: 115, max: 255 });
         let magnitude: number = ballSpeed;
         console.log(`starting angle: `, startingAngle);
         let xComponent = magnitude * Math.cos(toRads(startingAngle));
