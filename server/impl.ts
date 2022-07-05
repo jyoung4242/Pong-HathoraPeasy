@@ -22,23 +22,13 @@ export class Impl implements Methods<InternalState> {
         };
     }
 
-    startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
-        if (state.Players.length != 2) return Response.error('Invalid number of players');
-        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
-        //create first ball
-        const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
-        state.Balls.push({
-            position: startPosition,
-            velocity: { x: 0, y: 0 },
-            radius: 15,
-            isColliding: false,
-        });
-
-        //update Gamestate
-        state.gameState = GameStates.WaitingToStartRound;
-        ctx.broadcastEvent('Ball');
-        return Response.ok();
-    }
+    /**********************************************************
+     * joinGame - Remote Procedure Call
+     * adds user to list of Players array[]
+     * sends clients broadcast events to let them know player
+     * joining, and if we hit our player limit, gamestate
+     * changes to ready to start
+     *********************************************************/
 
     joinGame(state: InternalState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
         if (state.gameState != GameStates.PlayersJoining) return Response.error('Cannot allow players to join');
@@ -66,6 +56,39 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
+    /**********************************************************
+     * startGame - Remote Procedure Call
+     * adds ball to list of Balls array[]
+     * sends clients broadcast events to let them know ball
+     * can be displayed, changes gamestate ready for waiting
+     * to start
+     *********************************************************/
+
+    startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
+        if (state.Players.length != 2) return Response.error('Invalid number of players');
+        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
+
+        //create first ball
+        const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
+        state.Balls.push({
+            position: startPosition,
+            velocity: { x: 0, y: 0 },
+            radius: 15,
+            isColliding: false,
+        });
+
+        //update Gamestate
+        state.gameState = GameStates.WaitingToStartRound;
+        ctx.broadcastEvent('Ball');
+        return Response.ok();
+    }
+
+    /**********************************************************
+     * startRound - Remote Procedure Call
+     * creates initial velocity for ball to leave player
+     * changes gamestate so that onTick will manage movement
+     *********************************************************/
+
     startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
         //gaurd conditions
         if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
@@ -84,6 +107,11 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
+    /**********************************************************
+     * updatePlayerVelocity - Remote Procedure Call
+     * modifies the state value for a players velocity parameter
+     *********************************************************/
+
     updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
         if (state.gameState != GameStates.InProgress && state.gameState != GameStates.WaitingToStartRound && state.gameState != GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
 
@@ -96,6 +124,14 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
+    /**********************************************************
+     * getUserState - Hathora method
+     * this code runs prior to pushing state changes down to
+     * clients, gives opportunity to 'remap' state data to a
+     * client state, in case you want to hide some of the data
+     * from each user
+     *********************************************************/
+
     getUserState(state: InternalState, userId: UserId): PlayerState {
         let clientState: PlayerState = {
             player1position: state.Players[0] ? state.Players[0].position : { x: 15, y: 10 },
@@ -107,6 +143,13 @@ export class Impl implements Methods<InternalState> {
 
         return clientState;
     }
+
+    /**********************************************************
+     * onTick - Hathora method
+     * as specified in hathora.yml, this runs on a 50ms timer
+     * and its job is to update the position of each entity based
+     * on velocity parameters, and then check for collisions
+     *********************************************************/
 
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {
         //player movement
