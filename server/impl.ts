@@ -26,8 +26,9 @@ export class Impl implements Methods<InternalState> {
         if (state.Players.length != 2) return Response.error('Invalid number of players');
         if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
         //create first ball
+        const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
         state.Balls.push({
-            position: { x: 24, y: 24 },
+            position: startPosition,
             velocity: { x: 0, y: 0 },
             radius: 15,
             isColliding: false,
