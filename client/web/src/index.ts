@@ -38,21 +38,21 @@ let updateState = (update: UpdateArgs) => {
                  * triggers, P1/P2 joining, Ball arriving, and Game Over
                  *********************************************************/
                 case 'P2':
-                    model.player2Joined = 'visible';
-                    model.player1Joined = 'visible';
+                    model.player2Joined = true;
+                    model.player1Joined = true;
                     model.startButtonDisable = false;
                     break;
                 case 'P1':
-                    model.player1Joined = 'visible';
+                    model.player1Joined = true;
                     break;
                 case 'Ball':
-                    model.ballvisible = 'visible';
+                    model.ballvisible = true;
                     model.startButtonDisable = true;
                     break;
                 case 'Game Over':
-                    model.ballvisible = 'hidden';
-                    model.player2Joined = 'hidden';
-                    model.player1Joined = 'hidden';
+                    model.ballvisible = false;
+                    model.player2Joined = false;
+                    model.player1Joined = false;
                     alert('Game Over');
                     break;
             }
@@ -138,13 +138,12 @@ const template = `
           <div class="instructions">Up/Down arrows move paddle, spacebar launches ball</div>
 
           <div id='playArea' class="gameArea">
-            <div class="p1score" style="visibility: \${player1Joined}">P1: Lives: \${p1Lives}</div>
-            <div class="p2score" style="visibility: \${player2Joined}">P2: Lives: \${p2Lives}</div>
-            <div id="p1" class="p1" style="transform: translate(\${player1pos.x}px,\${player1pos.y}px); visibility: \${player1Joined}"></div>
-            <div id="p2" class="p2" style="transform: translate(\${player2pos.x}px,\${player2pos.y}px); visibility: \${player2Joined}"></div>
-            <div id="ball" class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px); visibility: \${ballvisible}"></div>
+            <div class="p1score" \${ === player1Joined} >P1: Lives: \${p1Lives}</div>
+            <div class="p2score" \${ === player2Joined}>P2: Lives: \${p2Lives}</div>
+            <div id="p1" \${ === player1Joined} class="p1" style="transform: translate(\${player1pos.x}px,\${player1pos.y}px)"></div>
+            <div id="p2" \${ === player2Joined} class="p2" style="transform: translate(\${player2pos.x}px,\${player2pos.y}px)"></div>
+            <div id="ball" \${ === ballvisible} class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px)"></div>
           </div>
-          
         </div>
       `;
 
@@ -167,7 +166,6 @@ const model = {
         token = sessionStorage.getItem('token');
         user = HathoraClient.getUserFromToken(token);
         model.username = `-> User Name: ${user.name}`;
-        model.loginButtonDisable = true;
         model.createButtonDisable = false;
         model.connectButtonDisable = false;
     },
@@ -242,7 +240,9 @@ const model = {
      * either data fields like title, p1Lives, and gameID
      * or CSS values, like player2pos
      * or attributes for visibility and disabled of the UI
-     * buttons
+     * buttons.  Also shown is the ability to abstract the
+     * evaluation of the booleans using a getter, such as the
+     * login button disable code below
      *********************************************************/
     title: '',
     gameID: '',
@@ -252,14 +252,16 @@ const model = {
     ball: { x: 25, y: 25 },
     p1Lives: 3,
     p2Lives: 3,
-    loginButtonDisable: false,
+    get loginButtonDisable() {
+        return this.username.length > 0;
+    },
     createButtonDisable: true,
     connectButtonDisable: true,
     joinButtonDisable: true,
     startButtonDisable: true,
-    player1Joined: 'hidden',
-    player2Joined: 'hidden',
-    ballvisible: 'hidden',
+    player1Joined: false,
+    player2Joined: false,
+    ballvisible: false,
 };
 
 /**********************************************************
