@@ -31,6 +31,12 @@ let updateState = (update: UpdateArgs) => {
     if (update.events.length) {
         update.events.forEach(event => {
             switch (event) {
+                /**********************************************************
+                 * Hathora: Broadcast Events from server
+                 * The server can broadcast, or send specific users events
+                 * For this game, there are four events that the server
+                 * triggers, P1/P2 joining, Ball arriving, and Game Over
+                 *********************************************************/
                 case 'P2':
                     model.player2Joined = 'visible';
                     model.player1Joined = 'visible';
