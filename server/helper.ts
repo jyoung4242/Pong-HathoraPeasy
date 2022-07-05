@@ -18,6 +18,7 @@ export function detectCollisions(state: ServerState) {
 
             // Compare object1 with object2
             if (rectIntersect(obj1.position.x, obj1.position.y, obj1.radius, obj1.radius, obj2.position.x, obj2.position.y, obj2.size.x, obj2.size.y)) {
+                console.log(`player collision`);
                 obj1.isColliding = true;
                 obj2.isColliding = true;
             }
