@@ -85,6 +85,8 @@ export class Impl implements Methods<InternalState> {
     }
 
     updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
+        if (state.gameState == GameStates.InProgress || state.gameState == GameStates.WaitingToStartRound || state.gameState == GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
+
         console.log(`Getting velocity update`);
         let pIndex = 0;
         if (state.Players[1]) {
