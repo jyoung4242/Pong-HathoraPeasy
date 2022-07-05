@@ -114,7 +114,7 @@ export class Impl implements Methods<InternalState> {
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {
         //player movement
         if (vollies % 5 == 1) {
-            ballspeedAdjustment += 1;
+            ballspeedAdjustment += 0.5;
         }
 
         for (const player of state.Players) {
