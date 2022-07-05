@@ -6,12 +6,23 @@ import { AnonymousUserData } from '../../../api/base';
 const myApp = document.getElementById('myApp');
 let intervalID: NodeJS.Timer;
 
+/**********************************************************
+ * Hathora Client variables
+ *********************************************************/
 const client = new HathoraClient();
 let token: string;
 let user: AnonymousUserData;
 let myConnection: HathoraConnection;
 
+/**********************************************************
+ * updateState is ran from when the server has a change in
+ * state, and the server needs to synch its data to the
+ * client
+ * @param update
+ *********************************************************/
+
 let updateState = (update: UpdateArgs) => {
+    //updating state
     model.player1pos = update.state.player1position;
     model.player2pos = update.state.player2position;
     model.ball = update.state.ballposition;
@@ -44,16 +55,31 @@ let updateState = (update: UpdateArgs) => {
     }
 };
 
+/**********************************************************
+ * bindKeyboardEvents
+ * creates the key up and key down events for the up arrow,
+ * the down arrow, and the spacebar
+ *********************************************************/
 const bindKeyboardEvents = () => {
     document.addEventListener('keydown', e => {
         switch (e.key) {
             case 'ArrowUp':
+                /**********************************************************
+                 * Hathora: remote procedure call (RPC)
+                 * runs the updatePlayerVelocity method that's on the server
+                 * and passes a velocity Vector to the method
+                 *********************************************************/
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
                 break;
             case 'ArrowDown':
+                //ditto
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
                 break;
             case ' ':
+                /**********************************************************
+                 * Hathora: remote procedure call (RPC)
+                 * runs the startRound method that's on the server
+                 *********************************************************/
                 myConnection.startRound({});
                 break;
             default:
@@ -63,9 +89,11 @@ const bindKeyboardEvents = () => {
     document.addEventListener('keyup', e => {
         switch (e.key) {
             case 'ArrowUp':
+                //ditto
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
                 break;
             case 'ArrowDown':
+                //ditto
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
                 break;
 
@@ -75,7 +103,12 @@ const bindKeyboardEvents = () => {
     });
 };
 
-//Create UI String Template
+/**********************************************************
+ * Peasy-UI: create UI String Template
+ * this template string forms the injected HTML template
+ * that Peasy-UI uses.  This is parsed, along with the
+ * data and event bindings called out
+ *********************************************************/
 const template = `
         <div>
           <div class="instructions">Pong \${title} \${username}</div>
@@ -110,7 +143,18 @@ const template = `
         </div>
       `;
 
+/**********************************************************
+ * Peasy-UI: data model object
+ * this object outlines all the monitored data bindings
+ * and events for the string template
+ *********************************************************/
 const model = {
+    /**********************************************************
+     * Hathora: loginAnonymous() and getUserFromToken() methods
+     * this uses sessionStorage for the browser to store token
+     * if token doesn't exist, it logs into Hathora coordinator
+     * and creates new access token
+     *********************************************************/
     login: async (event, model) => {
         if (sessionStorage.getItem('token') === null) {
             sessionStorage.setItem('token', await client.loginAnonymous());
@@ -122,6 +166,14 @@ const model = {
         model.createButtonDisable = false;
         model.connectButtonDisable = false;
     },
+    /**********************************************************
+     * Hathora: create() and connect() methods
+     * this is called when the create new game button is pressed
+     * and creates a new game instance from the Hathora server
+     * then subsequently runs the connect method, establishing
+     * the myConnection object, which we use to communicate
+     * between the client and the server
+     *********************************************************/
     create: async (event, model) => {
         model.gameID = await client.create(token, {});
         model.title = `-> Game ID: ${model.gameID}`;
@@ -130,10 +182,17 @@ const model = {
 
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
+        //manage UI access
         model.joinButtonDisable = false;
         model.createButtonDisable = true;
         model.connectButtonDisable = true;
     },
+    /**********************************************************
+     * Hathora: connect() methods
+     * runs the connect method, establishing
+     * the myConnection object, which we use to communicate
+     * between the client and the server
+     *********************************************************/
     connect: async (event, model) => {
         myConnection = await client.connect(token, model.gameID);
 
@@ -141,22 +200,45 @@ const model = {
         history.pushState({}, '', `/${model.gameID}`);
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
+        //manage UI access
         model.joinButtonDisable = false;
         model.createButtonDisable = true;
         model.connectButtonDisable = true;
     },
+
+    /**********************************************************
+     * Hathora: remote procedure call (RPC)
+     * runs the joinGame method that's on the server
+     *********************************************************/
     join: (event, model) => {
         myConnection.joinGame({});
         bindKeyboardEvents();
+        //manage UI access
         model.joinButtonDisable = true;
     },
+
+    /**********************************************************
+     * Hathora: remote procedure call (RPC)
+     * runs the startGame method that's on the server
+     *********************************************************/
     start: (event, model) => {
         myConnection.startGame({});
+        //manage UI access
         model.startButtonDisable = true;
     },
+    //copies input text to clipboard
     copy: () => {
         navigator.clipboard.writeText(model.gameID);
     },
+
+    /**********************************************************
+     * Peasy-UI: data bindings
+     * these values are tied into the UI specifically
+     * either data fields like title, p1Lives, and gameID
+     * or CSS values, like player2pos
+     * or attributes for visibility and disabled of the UI
+     * buttons
+     *********************************************************/
     title: '',
     gameID: '',
     username: '',
@@ -175,9 +257,20 @@ const model = {
     ballvisible: 'hidden',
 };
 
+/**********************************************************
+ * Create UI View, and mount the injected HTML
+ * you pass the parent element, the string template, and
+ * the data model object to UI.create()
+ *********************************************************/
 let myUI: UIView;
 myUI = UI.create(myApp, template, model);
 
+/**********************************************************
+ * Peasy-UI: UI.update()
+ * This method triggers the framework to monitor for
+ * changes in state and then automatically updates the UI
+ * with the new data, recommened to be called on interval
+ *********************************************************/
 intervalID = setInterval(() => {
     UI.update();
 }, 1000 / 60);
