@@ -15,7 +15,7 @@ let user: AnonymousUserData;
 let myConnection: HathoraConnection;
 
 /**********************************************************
- * updateState is ran from when the server has a change in
+ * Hathora: updateState is ran from when the server has a change in
  * state, and the server needs to synch its data to the
  * client
  *********************************************************/
