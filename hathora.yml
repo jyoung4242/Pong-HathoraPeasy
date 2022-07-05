@@ -21,10 +21,16 @@ types:
         size: Vector
         velocity: Vector
         isColliding: boolean
-    PlayerState:
+    ServerState:
         Players: Player[]
         Balls: Ball[]
         gameState: GameStates
+    PlayerState:
+        player1position: Vector
+        player2position: Vector
+        ballposition: Vector
+        player1Lives: int
+        player2Lives: int
 
 methods:
     updatePlayerVelocity:

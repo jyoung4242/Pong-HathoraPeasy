@@ -1,9 +1,9 @@
 import { Methods, Context } from './.hathora/methods';
 import { Response } from '../api/base';
-import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest, GameStates, IUpdatePlayerVelocityRequest } from '../api/types';
+import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest, GameStates, IUpdatePlayerVelocityRequest, ServerState } from '../api/types';
 import { changeVelocity, detectCollisions, resetGame, toRads } from './helper';
 
-type InternalState = PlayerState;
+type InternalState = ServerState;
 export const screenHeight = 400;
 const screenWidth = 600;
 const firstPlayerX = 15;
@@ -19,14 +19,14 @@ export class Impl implements Methods<InternalState> {
         };
     }
 
-    startGame(state: PlayerState, userId: string, ctx: Context, request: IStartGameRequest): Response {
+    startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
         if (state.Players.length != 2) return Response.error('Invalid number of players');
         if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
         //create first ball
         state.Balls.push({
-            position: { x: 24, y: 12 },
+            position: { x: 24, y: 24 },
             velocity: { x: 0, y: 0 },
-            radius: 10,
+            radius: 15,
             isColliding: false,
         });
 
@@ -35,7 +35,8 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
-    joinGame(state: PlayerState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
+    joinGame(state: InternalState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
+        console.log(`join game called`);
         if (state.gameState != GameStates.PlayersJoining) return Response.error('Cannot allow players to join');
         if (state.Players.length >= 2) return Response.error('This game has maximum amount of players');
         let startingposition: number;
@@ -48,7 +49,7 @@ export class Impl implements Methods<InternalState> {
             lives: 3,
             velocity: { x: 0, y: 0 },
             position: { x: startingposition, y: 0 },
-            size: { x: 10, y: 24 },
+            size: { x: 10, y: 48 },
             isColliding: false,
         });
 
@@ -56,7 +57,7 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
-    startRound(state: PlayerState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
+    startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
         //gaurd conditions
         if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
 
@@ -75,7 +76,7 @@ export class Impl implements Methods<InternalState> {
         return Response.ok();
     }
 
-    updatePlayerVelocity(state: PlayerState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
+    updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
         let pIndex = 0;
         if (state.Players[1]) {
             if (userId == state.Players[1].id) pIndex = 1;
@@ -86,7 +87,15 @@ export class Impl implements Methods<InternalState> {
     }
 
     getUserState(state: InternalState, userId: UserId): PlayerState {
-        return state;
+        let clientState: PlayerState = {
+            player1position: state.Players[0].position,
+            player2position: state.Players[1].position,
+            ballposition: state.Balls[0].position,
+            player1Lives: state.Players[0].lives,
+            player2Lives: state.Players[1].lives,
+        };
+
+        return clientState;
     }
 
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {

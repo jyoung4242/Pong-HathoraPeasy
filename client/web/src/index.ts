@@ -10,7 +10,45 @@ const client = new HathoraClient();
 let token: string;
 let user: AnonymousUserData;
 let myConnection: HathoraConnection;
-let updateState = (update: UpdateArgs) => {};
+
+let updateState = (update: UpdateArgs) => {
+    model.player1pos = update.state.player1position;
+    model.player2pos = update.state.player2position;
+    model.ball = update.state.ballposition;
+    model.p1Lives = update.state.player1Lives;
+    model.p2Lives = update.state.player2Lives;
+};
+
+const bindKeyboardEvents = () => {
+    myApp.addEventListener('keydown', e => {
+        switch (e.key) {
+            case 'ArrowUp':
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
+                break;
+            case 'ArrowDown':
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
+                break;
+            case ' ':
+                myConnection.startRound({});
+                break;
+            default:
+                break;
+        }
+    });
+    myApp.addEventListener('keyup', e => {
+        switch (e.key) {
+            case 'ArrowUp':
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+                break;
+            case 'ArrowDown':
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+                break;
+
+            default:
+                break;
+        }
+    });
+};
 
 //Create UI String Template
 const template = `
@@ -21,7 +59,7 @@ const template = `
             <button id="btnLogin" class="button" \${click@=>login}>Login</button>
           </div>
 
-          <div class="flex spacedEqual large_width">
+          <div class="flex startLeft large_width">
             <button id="btnCreateGame" class="button" \${click@=>create}>Create Game</button>
             <button id="btnConnectGame" class="button" \${click@=>connect}>Connect Game</button>
             <label for="gameJoinID">Game ID</label>
@@ -33,7 +71,11 @@ const template = `
             <button id="btnStartGame"  class="button" \${click@=>start}>Start Game</button>
           </div>
           <div class="instructions">Up/Down arrows move paddle, spacebar launches ball</div>
-          <div id='playArea' class="gameArea"></div>
+          <div id='playArea' class="gameArea">
+            <div id="p1" class="p1" style="transform: translate(\${player1pos.x}px,\${player1pos.y}px)"></div>
+            <div id="p2" class="p2" style="transform: translate(\${player2pos.x}px,\${player1pos.y}px)"></div>
+            <div id="ball" class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px)"></div>
+          </div>
           
         </div>
       `;
@@ -54,17 +96,16 @@ const model = {
         myConnection = await client.connect(token, model.gameID);
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
-        myConnection.joinGame({});
     },
     connect: async (event, model) => {
         myConnection = await client.connect(token, model.gameID);
         model.title = `-> Game ID: ${model.gameID}`;
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
-        myConnection.joinGame({});
     },
     join: (event, model) => {
         myConnection.joinGame({});
+        bindKeyboardEvents();
     },
     start: (event, model) => {
         myConnection.startGame({});
@@ -72,6 +113,11 @@ const model = {
     title: '',
     gameID: '',
     username: '',
+    player1pos: { x: 15, y: 10 },
+    player2pos: { x: 575, y: 10 },
+    ball: { x: 25, y: 25 },
+    p1Lives: 3,
+    p2Lives: 3,
 };
 
 let myUI: UIView;
