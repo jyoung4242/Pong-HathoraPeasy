@@ -48,15 +48,12 @@ const bindKeyboardEvents = () => {
     document.addEventListener('keydown', e => {
         switch (e.key) {
             case 'ArrowUp':
-                console.log(`pressing up`);
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
                 break;
             case 'ArrowDown':
-                console.log(`pressing down`);
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
                 break;
             case ' ':
-                console.log(`pressing space`);
                 myConnection.startRound({});
                 break;
             default:
@@ -115,7 +112,6 @@ const template = `
 
 const model = {
     login: async (event, model) => {
-        console.log(`Logging In`);
         if (sessionStorage.getItem('token') === null) {
             sessionStorage.setItem('token', await client.loginAnonymous());
         }
@@ -127,12 +123,11 @@ const model = {
         model.connectButtonDisable = false;
     },
     create: async (event, model) => {
-        console.log(`Creating new game`);
         model.gameID = await client.create(token, {});
         model.title = `-> Game ID: ${model.gameID}`;
         history.pushState({}, '', `/${model.gameID}`);
         myConnection = await client.connect(token, model.gameID);
-        console.log(`myConnection status: `, myConnection);
+
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
         model.joinButtonDisable = false;
@@ -140,9 +135,8 @@ const model = {
         model.connectButtonDisable = true;
     },
     connect: async (event, model) => {
-        console.log(`Connecting to game`);
         myConnection = await client.connect(token, model.gameID);
-        console.log(`myConnection status: `, myConnection);
+
         model.title = `-> Game ID: ${model.gameID}`;
         history.pushState({}, '', `/${model.gameID}`);
         myConnection.onUpdate(updateState);
@@ -152,18 +146,15 @@ const model = {
         model.connectButtonDisable = true;
     },
     join: (event, model) => {
-        console.log(`Join Game`);
         myConnection.joinGame({});
         bindKeyboardEvents();
         model.joinButtonDisable = true;
     },
     start: (event, model) => {
-        console.log(`Start Game`);
         myConnection.startGame({});
         model.startButtonDisable = true;
     },
     copy: () => {
-        console.log('copied');
         navigator.clipboard.writeText(model.gameID);
     },
     title: '',
