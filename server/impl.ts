@@ -4,7 +4,7 @@ import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGam
 import { changeVelocity, detectCollisions, resetGame, toRads } from './helper';
 
 type InternalState = ServerState;
-export const screenHeight = 400;
+const screenHeight = 400;
 const screenWidth = 600;
 const firstPlayerX = 15;
 const secondPlayerX = 575;
@@ -40,7 +40,6 @@ export class Impl implements Methods<InternalState> {
     }
 
     joinGame(state: InternalState, userId: string, ctx: Context, request: IJoinGameRequest): Response {
-        console.log(`join game called`);
         if (state.gameState != GameStates.PlayersJoining) return Response.error('Cannot allow players to join');
         if (state.Players.length >= 2) return Response.error('This game has maximum amount of players');
         let startingposition: number;
@@ -67,7 +66,6 @@ export class Impl implements Methods<InternalState> {
     }
 
     startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
-        console.log(`Start Round Called`);
         //gaurd conditions
         if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
 
@@ -77,11 +75,10 @@ export class Impl implements Methods<InternalState> {
         if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -75, max: 75 });
         else startingAngle = ctx.chance.integer({ min: 115, max: 255 });
         let magnitude: number = ballSpeed;
-        console.log(`starting angle: `, startingAngle);
+
         let xComponent = magnitude * Math.cos(toRads(startingAngle));
         let yComponent = magnitude * Math.sin(toRads(startingAngle));
         state.Balls[0].velocity = { x: xComponent, y: yComponent };
-        console.log('changing gamestate');
         state.gameState = GameStates.InProgress;
         return Response.ok();
     }
@@ -89,7 +86,6 @@ export class Impl implements Methods<InternalState> {
     updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
         if (state.gameState != GameStates.InProgress && state.gameState != GameStates.WaitingToStartRound && state.gameState != GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
 
-        console.log(`Getting velocity update`);
         let pIndex = 0;
         if (state.Players[1]) {
             if (userId == state.Players[1].id) pIndex = 1;
@@ -154,7 +150,6 @@ export class Impl implements Methods<InternalState> {
 
             for (const player of state.Players) {
                 if (player.isColliding) {
-                    console.log(`hit player`);
                     vollies += 1;
                     for (const ball of state.Balls) {
                         if (ball.isColliding) {
@@ -170,14 +165,12 @@ export class Impl implements Methods<InternalState> {
                 const hittingTop = ball.position.y <= 0;
                 const hittingBottom = ball.position.y + ball.radius >= screenHeight;
                 if (hittingTop) {
-                    console.log('hit top');
                     //updateVelocity
                     vollies += 1;
                     changeVelocity(ball, 'top');
                 } else if (hittingBottom) {
                     //updateVelocity
                     vollies += 1;
-                    console.log(`hit bottom`);
                     changeVelocity(ball, 'bottom');
                 }
             }
@@ -187,21 +180,17 @@ export class Impl implements Methods<InternalState> {
                 const hittingLeft = ball.position.x <= 0;
                 const hittingRight = ball.position.x + ball.radius >= screenWidth;
                 if (hittingLeft) {
-                    console.log(`hit left side`, ball.position.x);
                     //player left decrement lives
                     state.Players[0].lives -= 1;
                     //if lives 0, game over
                     if (state.Players[0].lives == 0) {
-                        console.log(`Game Over`);
                         ctx.broadcastEvent('Game Over');
                         state.gameState = GameStates.GameOver;
                     } else resetGame(state, 'left');
                 } else if (hittingRight) {
-                    console.log(`hit right side`);
                     //player right decrement lives
                     state.Players[1].lives -= 1;
                     if (state.Players[1].lives == 0) {
-                        console.log(`Game Over`);
                         ctx.broadcastEvent('Game Over');
                         state.gameState = GameStates.GameOver;
                     } else resetGame(state, 'right');

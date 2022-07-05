@@ -1,5 +1,4 @@
-import { Ball, GameStates, Player, PlayerState, ServerState, Vector } from '../api/types';
-import { screenHeight } from './impl';
+import { Ball, GameStates, Player, ServerState, Vector } from '../api/types';
 
 export function detectCollisions(state: ServerState) {
     let obj1;
@@ -34,7 +33,6 @@ function rectIntersect(x1: number, y1: number, w1: number, h1: number, x2: numbe
 }
 
 export function resetGame(state: ServerState, side: 'left' | 'right') {
-    console.log('resetting game');
     state.Balls.length = 0;
     //create first ball
 
