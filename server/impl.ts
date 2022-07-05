@@ -77,6 +77,7 @@ export class Impl implements Methods<InternalState> {
     }
 
     updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
+        console.log(`Getting velocity update`);
         let pIndex = 0;
         if (state.Players[1]) {
             if (userId == state.Players[1].id) pIndex = 1;
@@ -88,11 +89,11 @@ export class Impl implements Methods<InternalState> {
 
     getUserState(state: InternalState, userId: UserId): PlayerState {
         let clientState: PlayerState = {
-            player1position: state.Players[0].position,
-            player2position: state.Players[1].position,
-            ballposition: state.Balls[0].position,
-            player1Lives: state.Players[0].lives,
-            player2Lives: state.Players[1].lives,
+            player1position: state.Players[0] ? state.Players[0].position : { x: 0, y: 0 },
+            player2position: state.Players[1] ? state.Players[1].position : { x: 0, y: 0 },
+            ballposition: state.Balls[0] ? state.Balls[0].position : { x: 0, y: 0 },
+            player1Lives: state.Players[0] ? state.Players[0].lives : 3,
+            player2Lives: state.Players[1] ? state.Players[1].lives : 3,
         };
 
         return clientState;

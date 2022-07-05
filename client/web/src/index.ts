@@ -20,22 +20,25 @@ let updateState = (update: UpdateArgs) => {
 };
 
 const bindKeyboardEvents = () => {
-    myApp.addEventListener('keydown', e => {
+    document.addEventListener('keydown', e => {
         switch (e.key) {
             case 'ArrowUp':
+                console.log(`pressing up`);
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
                 break;
             case 'ArrowDown':
+                console.log(`pressing down`);
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
                 break;
             case ' ':
+                console.log(`pressing space`);
                 myConnection.startRound({});
                 break;
             default:
                 break;
         }
     });
-    myApp.addEventListener('keyup', e => {
+    document.addEventListener('keyup', e => {
         switch (e.key) {
             case 'ArrowUp':
                 myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
@@ -100,6 +103,7 @@ const model = {
     connect: async (event, model) => {
         myConnection = await client.connect(token, model.gameID);
         model.title = `-> Game ID: ${model.gameID}`;
+        history.pushState({}, '', `/${model.gameID}`);
         myConnection.onUpdate(updateState);
         myConnection.onError(console.error);
     },
