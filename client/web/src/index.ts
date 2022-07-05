@@ -18,7 +18,6 @@ let myConnection: HathoraConnection;
  * updateState is ran from when the server has a change in
  * state, and the server needs to synch its data to the
  * client
- * @param update
  *********************************************************/
 
 let updateState = (update: UpdateArgs) => {
