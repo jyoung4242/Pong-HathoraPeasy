@@ -15,10 +15,9 @@ export function detectCollisions(state: ServerState) {
         obj1 = state.Balls[i];
         for (let j = i; j < state.Players.length; j++) {
             obj2 = state.Players[j];
-            console.log(`checking for collision`);
+
             // Compare object1 with object2
             if (rectIntersect(obj1.position.x, obj1.position.y, obj1.radius, obj1.radius, obj2.position.x, obj2.position.y, obj2.size.x, obj2.size.y)) {
-                console.log(`player collision`);
                 obj1.isColliding = true;
                 obj2.isColliding = true;
             }
@@ -39,12 +38,12 @@ export function resetGame(state: ServerState, side: 'left' | 'right') {
     state.Balls.length = 0;
     //create first ball
 
-    let startPosition;
-    if (side == 'left') startPosition = 24;
-    else startPosition = 572 - 12;
+    let startPosition: Vector;
+    if (side == 'left') startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
+    else startPosition = { x: state.Players[1].position.x - 12, y: state.Players[1].position.y + 12 };
 
     state.Balls.push({
-        position: { x: startPosition, y: 12 },
+        position: startPosition,
         velocity: { x: 0, y: 0 },
         radius: 15,
         isColliding: false,

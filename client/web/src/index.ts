@@ -33,6 +33,12 @@ let updateState = (update: UpdateArgs) => {
                     model.ballvisible = 'visible';
                     model.startButtonDisable = true;
                     break;
+                case 'Game Over':
+                    model.ballvisible = 'hidden';
+                    model.player2Joined = 'hidden';
+                    model.player1Joined = 'hidden';
+                    alert('Game Over');
+                    break;
             }
         });
     }

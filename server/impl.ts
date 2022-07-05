@@ -9,7 +9,9 @@ const screenWidth = 600;
 const firstPlayerX = 15;
 const secondPlayerX = 575;
 const ballSpeed = 100;
+let ballspeedAdjustment = 0;
 const paddlespeed = 20;
+let vollies = 0;
 
 export class Impl implements Methods<InternalState> {
     initialize(ctx: Context, request: IInitializeRequest): InternalState {
@@ -111,6 +113,9 @@ export class Impl implements Methods<InternalState> {
 
     onTick(state: InternalState, ctx: Context, timeDelta: number): void {
         //player movement
+        if (vollies % 5 == 1) {
+            ballspeedAdjustment += 1;
+        }
 
         for (const player of state.Players) {
             //check for players being at 'top' and 'bottom of screen
@@ -123,14 +128,25 @@ export class Impl implements Methods<InternalState> {
             } else if (!hittingBottom && player.velocity.y > 0) {
                 player.position.y += player.velocity.y * pixelsToMove;
             }
+            if (state.gameState == GameStates.WaitingToStartRound) {
+                if (state.Balls[0].position.x < 300) {
+                    //left player
+                    if (player.id == state.Players[0].id) state.Balls[0].position.y += state.Players[0].velocity.y * pixelsToMove;
+                } else {
+                    //right player
+                    if (player.id == state.Players[1].id) state.Balls[0].position.y += state.Players[1].velocity.y * pixelsToMove;
+                }
+            }
         }
 
         //ball movement
         if (state.gameState == GameStates.InProgress) {
             //set each ball movement
             for (const ball of state.Balls) {
-                ball.position.x += ball.velocity.x * timeDelta;
-                ball.position.y += ball.velocity.y * timeDelta;
+                if (ball.velocity.x >= 0) ball.position.x += (ball.velocity.x + ballspeedAdjustment) * timeDelta;
+                else ball.position.x += (ball.velocity.x - ballspeedAdjustment) * timeDelta;
+                if (ball.velocity.y >= 0) ball.position.y += (ball.velocity.y + ballspeedAdjustment) * timeDelta;
+                else ball.position.y += (ball.velocity.y - ballspeedAdjustment) * timeDelta;
             }
 
             //check for collisions with players
@@ -139,6 +155,7 @@ export class Impl implements Methods<InternalState> {
             for (const player of state.Players) {
                 if (player.isColliding) {
                     console.log(`hit player`);
+                    vollies += 1;
                     for (const ball of state.Balls) {
                         if (ball.isColliding) {
                             //depending on player, change balls velocity accordingly
@@ -155,9 +172,11 @@ export class Impl implements Methods<InternalState> {
                 if (hittingTop) {
                     console.log('hit top');
                     //updateVelocity
+                    vollies += 1;
                     changeVelocity(ball, 'top');
                 } else if (hittingBottom) {
                     //updateVelocity
+                    vollies += 1;
                     console.log(`hit bottom`);
                     changeVelocity(ball, 'bottom');
                 }
@@ -172,17 +191,20 @@ export class Impl implements Methods<InternalState> {
                     //player left decrement lives
                     state.Players[0].lives -= 1;
                     //if lives 0, game over
-                    if (state.Players[0].lives == 0) state.gameState = GameStates.GameOver;
-                    //else, reset game
-                    resetGame(state, 'left');
+                    if (state.Players[0].lives == 0) {
+                        console.log(`Game Over`);
+                        ctx.broadcastEvent('Game Over');
+                        state.gameState = GameStates.GameOver;
+                    } else resetGame(state, 'left');
                 } else if (hittingRight) {
                     console.log(`hit right side`);
                     //player right decrement lives
                     state.Players[1].lives -= 1;
-                    //if lives 0 game over
-                    if (state.Players[1].lives == 0) state.gameState = GameStates.GameOver;
-                    //else reset game
-                    resetGame(state, 'right');
+                    if (state.Players[1].lives == 0) {
+                        console.log(`Game Over`);
+                        ctx.broadcastEvent('Game Over');
+                        state.gameState = GameStates.GameOver;
+                    } else resetGame(state, 'right');
                 }
             }
         }
