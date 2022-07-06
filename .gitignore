@@ -1,11 +1,13 @@
 
 #.hathora
-/server/.hathora
+/server/.hathora/*
+
 /client/.hathora/*
 !/client/.hathora/client.ts
 
 node_modules
-dist
+#dist
+
 .env
 /api/*
 !/api/base.ts
