@@ -15,5 +15,5 @@ dist
 !/client/prototype-ui/plugins
 /client/web/webpackstarter.bat
 /client/web/node_modules
-/client/web/build/*
+!/client/web/build/*
 
