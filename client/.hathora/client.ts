@@ -27,7 +27,7 @@ export type UpdateCallback = (updateArgs: UpdateArgs) => void;
 export type ErrorCallback = (error: ConnectionFailure) => void;
 
 export class HathoraClient {
-  public appId = "13d6e53c3bb8f9e7064ab0a2c3796c1c98f0a375fdb7b39610191c3f38eda5f8";
+  public appId = "44e298fc0a5bccb88bdd70723f72b986f73ea3a70b580def7ba7da3fba061f96";
 
   public static getUserFromToken(token: string): UserData {
     return jwtDecode(token);
