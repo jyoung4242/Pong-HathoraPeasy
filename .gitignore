@@ -1,8 +1,14 @@
-.hathora
+
+#.hathora
+/server/.hathora
+/client/.hathora/*
+!/client/.hathora/client.ts
+
 node_modules
 dist
 .env
-/api
+/api/*
+!/api/base.ts
 /data/*
 !/data/saves
 /client/prototype-ui/*
@@ -10,3 +16,4 @@ dist
 /client/web/webpackstarter.bat
 /client/web/node_modules
 /client/web/build/*
+

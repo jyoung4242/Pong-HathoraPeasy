@@ -15,6 +15,13 @@ let user: AnonymousUserData;
 let myConnection: HathoraConnection;
 
 /**********************************************************
+ * Hathora: Broadcast Events from server
+ * The server can broadcast, or send specific users events
+ * For this game, there are four events that the server
+ * triggers, P1/P2 joining, Ball arriving, and Game Over
+ *********************************************************/
+
+/**********************************************************
  * Hathora: updateState is ran from when the server has a change in
  * state, and the server needs to synch its data to the
  * client
@@ -31,12 +38,6 @@ let updateState = (update: UpdateArgs) => {
     if (update.events.length) {
         update.events.forEach(event => {
             switch (event) {
-                /**********************************************************
-                 * Hathora: Broadcast Events from server
-                 * The server can broadcast, or send specific users events
-                 * For this game, there are four events that the server
-                 * triggers, P1/P2 joining, Ball arriving, and Game Over
-                 *********************************************************/
                 case 'P2':
                     model.player2Joined = true;
                     model.player1Joined = true;
@@ -113,10 +114,10 @@ const bindKeyboardEvents = () => {
  * this template string forms the injected HTML template
  * that Peasy-UI uses.  This is parsed, along with the
  * data and event bindings called out
- *********************************************************/
+ **********************************************************/
 const template = `
         <div>
-          <div class="instructions">Pong \${title} \${username}</div>
+          <div class="instructions">Pong <span \${===showID}> -> Game ID: \${gameID}</span> <span \${===showUser}> -> User: \${username}</span></div>
           
           <div class="flex small_width">
             <button id="btnLogin" class="button" \${click@=>login} \${disabled <== loginButtonDisable}>Login</button>
@@ -165,7 +166,7 @@ const model = {
         }
         token = sessionStorage.getItem('token');
         user = HathoraClient.getUserFromToken(token);
-        model.username = `-> User Name: ${user.name}`;
+        model.username = user.name;
         model.createButtonDisable = false;
         model.connectButtonDisable = false;
     },
@@ -179,7 +180,7 @@ const model = {
      *********************************************************/
     create: async (event, model) => {
         model.gameID = await client.create(token, {});
-        model.title = `-> Game ID: ${model.gameID}`;
+        model.title = model.gameID;
         history.pushState({}, '', `/${model.gameID}`);
         myConnection = await client.connect(token, model.gameID);
 
@@ -253,6 +254,12 @@ const model = {
     p1Lives: 3,
     p2Lives: 3,
     get loginButtonDisable() {
+        return this.username.length > 0;
+    },
+    get showID() {
+        return this.gameID.length > 0;
+    },
+    get showUser() {
         return this.username.length > 0;
     },
     createButtonDisable: true,
