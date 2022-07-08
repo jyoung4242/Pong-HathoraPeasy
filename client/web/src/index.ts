@@ -285,6 +285,19 @@ myUI = UI.create(myApp, template, model);
  * changes in state and then automatically updates the UI
  * with the new data, recommened to be called on interval
  *********************************************************/
-intervalID = setInterval(() => {
+/* intervalID = setInterval(() => {
     UI.update();
-}, 1000 / 60);
+}, 1000 / 60); */
+let startTime;
+const uiUpdate = deltaTime => {
+    if (startTime === undefined) {
+        startTime = deltaTime;
+    }
+    const elapsed = deltaTime - startTime;
+    if (elapsed >= 100) {
+        startTime = deltaTime;
+        UI.update();
+    }
+    window.requestAnimationFrame(uiUpdate);
+};
+window.requestAnimationFrame(uiUpdate);
