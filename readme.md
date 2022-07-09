@@ -331,9 +331,51 @@ The joinGame method primary job is to add the Player object to the array of stat
  
 #### startGame:
 
+```ts
+    startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
+        if (state.Players.length != 2) return Response.error('Invalid number of players');
+        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
+
+        //create first ball
+        const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
+        state.Balls.push({
+            position: startPosition,
+            velocity: { x: 0, y: 0 },
+            radius: 15,
+            isColliding: false,
+        });
+
+        //update Gamestate
+        state.gameState = GameStates.WaitingToStartRound;
+        ctx.broadcastEvent('Ball');
+        return Response.ok();
+    }
+```
+
 The startGame method primary function is to modify the game state after we add a ball into the game.  The ball is automatically added next to the left player’s paddle.
  
 #### startRound:
+
+```ts
+    startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
+        //gaurd conditions
+        if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
+
+        //set starting angle, by which side your on
+        //if left side, angle will be between
+        let startingAngle: number;
+        if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -75, max: 75 });
+        else startingAngle = ctx.chance.integer({ min: 115, max: 255 });
+        let magnitude: number = ballSpeed;
+
+        let xComponent = magnitude * Math.cos(toRads(startingAngle));
+        let yComponent = magnitude * Math.sin(toRads(startingAngle));
+        state.Balls[0].velocity = { x: xComponent, y: yComponent };
+        state.gameState = GameStates.InProgress;
+        return Response.ok();
+    }
+
+```
 
 The startRound method primary job is to set the initial velocity of the ball off the left player’s paddle, and to modify the game state to an active state.
  
