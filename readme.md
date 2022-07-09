@@ -90,14 +90,24 @@ Methods (from the docs)
 ![Methods Docs](/tutorial/screenshots/ss4.png)
 
 Auth (from the docs)
+
+![Authentication Docs](/tutorial/screenshots/ss5.png)
  
 userState (from the docs)
  
+![userState Docs](/tutorial/screenshots/ss6.png)
+ 
 initializeArgs (from the docs) – for this tutorial we will not be using this
+ 
+![initializeArgs Docs](/tutorial/screenshots/ss7.png)
  
 Error (from the docs)
  
+![Error Docs](/tutorial/screenshots/ss8.png)
+ 
 Tick (from the docs)
+ 
+![Tick Docs](/tutorial/screenshots/ss9.png)
  
 So… given that information, I’m outlining that our hathora.yml will be defined initially as follows:
  
