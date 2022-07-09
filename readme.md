@@ -381,9 +381,37 @@ The startRound method primary job is to set the initial velocity of the ball off
  
 #### updatePlayerPosition:
 
+```ts
+    updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
+        if (state.gameState != GameStates.InProgress && state.gameState != GameStates.WaitingToStartRound && state.gameState != GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
+
+        let pIndex = 0;
+        if (state.Players[1]) {
+            if (userId == state.Players[1].id) pIndex = 1;
+        }
+
+        state.Players[pIndex].velocity = request.velocity;
+        return Response.ok();
+    }
+
+```
+
 the updatePlayerPosition method will take the velocity vector from the client and update the global state.  
  
 #### getUserState:
+```ts
+    getUserState(state: InternalState, userId: UserId): PlayerState {
+        let clientState: PlayerState = {
+            player1position: state.Players[0] ? state.Players[0].position : { x: 15, y: 10 },
+            player2position: state.Players[1] ? state.Players[1].position : { x: 575, y: 10 },
+            ballposition: state.Balls[0] ? state.Balls[0].position : { x: 25, y: 25 },
+            player1Lives: state.Players[0] ? state.Players[0].lives : 3,
+            player2Lives: state.Players[1] ? state.Players[1].lives : 3,
+        };
+
+        return clientState;
+    }
+```
 
 getUserState is an automatically generated method from Hathora, that allows the server to modify the returned state to the client based off the userID…. For example, in a card game where you don’t want each client to know the card values of all the players, you can filter the provided client state so that you don’t expose that data to each client.  This is how we will re-map player state, take note of using the ternary operator to set a default for undefined data:
  
