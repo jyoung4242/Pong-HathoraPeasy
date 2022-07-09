@@ -17,7 +17,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 -   [Workflow](#workflow)
 -   [Project Folder Setup](#project-setup)
 -   [Hathora YML](#yml)
--   [Hathora Init](#)
+-   [Hathora Init](#generating-hathora-project)
 
 ## :trophy: End Objective
 
