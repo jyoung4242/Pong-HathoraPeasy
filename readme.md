@@ -26,7 +26,7 @@ Peasy-UI is a UI data binding Library. Peasy UI provides uncomplicated UI bindin
 I developed this project and tutorial on a Windows 10 system, utilizing VS code, and executing all terminal commands in the node PowerShell terminal embedded in VS code.  There maybe be nuanced differences between developing on a Mac or Linux system.  Also, if using different shell applications or a different IDE, there may be subtle differences to take note of.
 
 ## Hathora Backend
-### Where to find
+### Where to find:
 #### GitHub
 - [Hathora Github](https://github.com/hathora/hathora)
 
@@ -34,10 +34,12 @@ There is a comprehensive readme file that helps get you started, which this tuto
 
 #### Documentation
 - [API documentation for Hathora](https://docs.hathora.dev/#/)
+
 The API documentation for Hathora can be found here, which is a very nice, continually updated, site that outlines everything you need to know about using this framework.
 
 #### Discord
 - [Hathora Disord](https://discord.gg/3MuAdAdb)
+
 The Hathora discord server gives you access to the team directly.  This has been critical for me and my journey with Hathora, as the team has proven very open to ideas, very responsive to any issues encountered, and overall is a great group of individuals that I’ve enjoyed interacting with.  I get updates on new features and guidance on any API breaking changes here as well, which is a plus.
 Workflow
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
