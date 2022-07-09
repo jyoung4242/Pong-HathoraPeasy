@@ -1,7 +1,7 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40jyoung424242)](https://twitter.com/jyoung424242)
 
-<h1 align="center">Tutorial for Hathora Backend/Peasy-UI Front End</h1>
+<h1 align="center">Tutorial for Hathora Back End/Peasy-UI Front End</h1>
 
 # 👋 Introduction to the tutorial
 
@@ -9,8 +9,11 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 
 ## Table of Contents (Links)
 
+-   [Introduction](#👋-introduction-to-the-tutorial)
+-   [End State Objective](#end-objective)
 
-End Objective
+## End Objective
+
 The end state for this tutorial is a deployed client on Netlify that runs the client code that connects to the Hathora backend server.   It takes two players who can join the game, and each player has three lives.  The ball bounces around until it leaves the screen on either side, and that player loses a life each time.  When all the lives are gone, the game ends.  
 Tools
 Hathora is a multiplayer networking framework that manages much of the low-level duties that otherwise would have to be managed.  Use cases for Hathora include turn-based games, real-time multiplayer games, and social applications such as chatting.  Hathora manages the networking and remote procedure calls, provides a prototyping UI client, and provides a full API that abstracts away much of the low-level work.
