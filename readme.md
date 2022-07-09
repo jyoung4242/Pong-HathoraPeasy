@@ -67,7 +67,9 @@ The hathora.yml is a critically important file.  A “yaml” file is a human-re
 
 According to Wikipedia:  
 
-```It is commonly used for configuration files and in applications where data is being stored or transmitted. YAML targets many of the same communications applications as Extensible Markup Language (XML)…```
+```
+It is commonly used for configuration files and in applications where data is being stored or transmitted. YAML targets many of the same communications applications as Extensible Markup Language (XML)…
+```
 
 Before Hathora, I didn’t know what a YML file was, so… this was all new to me.
 We must outline out what our YML file needs to look like before we ask Hathora to build the project structure.  Hathora parses the YML file, and builds the backend server template, the prototype UI, and provides the end path for your custom front end client when it builds the project.
