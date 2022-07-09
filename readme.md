@@ -28,7 +28,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
         -   [Start Round](#startround)
         -   [UpdatePlayerPosition](#updateplayerposition)
         -   [Get User State](#getuserstate)
-        -   [TickS](#ontick)
+        -   [Ticks](#ontick)
     -   [Custom UI](#custom-ui)
 -   [Peasy-UI](#peasy-ui-front-end)
     -   [Where to Find](#where-to-find-1)
@@ -37,6 +37,10 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 -   [Tutorial Workflow](#tutorial-workflow)
     -   [Creating client project](#creating-custom-ui-project-in-hathora-framework)
     -   [Installing and importing Peasy-UI](#installing-and-importing-peasy-ui)
+    -   [String Template and Data Model](#creating-string-template-and-data-model)
+    -   [Creating Data Bindings](#creating-data-bindings)
+    -   [Connecting the Client](#connecting-the-client)
+    -   [Remote Procedure Calls](#remote-procedure-calls)
 
 ## :trophy: End Objective
 
@@ -895,28 +899,152 @@ We can add the remaining data bindings now. Let’s update the data model object
 #### Connecting the client
 
 Now our data bindings are complete, and now we can connect Hathora to our client.
-Connecting the custom client to the server
+
+##### Connecting the custom client to the server
+
 This section is going to import the Hathora Client module, as well as fill in the logic for the Login, Create Game, and Connect Game buttons.
+
 Let’s import the Hathora Client code into our index.ts file.
- 
+
+```ts
+import { HathoraClient, HathoraConnection, UpdateArgs } from '../../.hathora/client';
+```
+
 This will give us access to the methods needed to connect our client.
 Let’s prepare our necessary app scoped variables :
+
+```ts
+/**********************************************************
+ * Hathora Client variables
+ *********************************************************/
+const client = new HathoraClient();
+let token: string;
+let user: AnonymousUserData;
+let myConnection: HathoraConnection;
+let updateState = () => {};
+```
+
+This gives us the key items that are required for connecting to the back-end server.  Take note of the updateState method, as we have it empty for now, we will fill it in later.
+
+This first thing our code will do is look to see if there is a session token saved locally, in session storage.  If not, we create a new authorization token.  This will be a part of our Login method for the button, so let’s fill that out down in the data model that we created earlier:
  
-This gives us the key items that are required for connecting to the back-end server.  Take note of the update state method, as we have it empty for now, we will fill it in later.
-This first thing our code will do is look to see if there is a session token saved locally, in session storage.  If not, we create a new authorization token.  This I part of our Login method for the button, so let’s fill that out:
- 
+```ts
+login: async (event, model) => {
+    if (sessionStorage.getItem('token') === null) {
+        sessionStorage.setItem('token', await client.loginAnonymous());
+    }
+    token = sessionStorage.getItem('token');
+    user = HathoraClient.getUserFromToken(token);
+    model.username = user.name;
+    model.createButtonDisable = false;
+    model.connectButtonDisable = false;
+},
+```
+
 So after a token is established with the loginAnanymous() method, we can retrieve our user data from that token.  We can set our model.username to our new ID, and the UI will automatically update, thanks Peasy!!!!
+
 So now that we’re logged in, let’s work on creating a new game instance, or joining an existing one.
- 
+
+```ts
+    create: async (event, model) => {
+        model.gameID = await client.create(token, {});
+        model.title = model.gameID;
+        history.pushState({}, '', `/${model.gameID}`);
+        myConnection = await client.connect(token, model.gameID);
+
+        myConnection.onUpdate(updateState);
+        myConnection.onError(console.error);
+        //manage UI access
+        model.joinButtonDisable = false;
+        model.createButtonDisable = true;
+        model.connectButtonDisable = true;
+    },
+    connect: async (event, model) => {
+        myConnection = await client.connect(token, model.gameID);
+
+        model.title = `-> Game ID: ${model.gameID}`;
+        history.pushState({}, '', `/${model.gameID}`);
+        myConnection.onUpdate(updateState);
+        myConnection.onError(console.error);
+        //manage UI access
+        model.joinButtonDisable = false;
+        model.createButtonDisable = true;
+        model.connectButtonDisable = true;
+    },
+
+```
+
 Each code is similar, the only difference being that the create game method uses the client.create() method, which allows for a gameID to be created, and yes, we tie it into our UI model, and the UI will update automatically.  The important final piece of these is the establishment of myConnection, which will be used for remote procedure calls.
-Remote Procedure Calls
+
+#### Remote Procedure Calls
+
 Using myConnection, we now have access to the methods that are created on the server, in the impl.ts file.  This lets us fill out the two other buttons, Join Game and Start Game.
  
+```ts
+join: (event, model) => {
+    myConnection.joinGame({});
+    bindKeyboardEvents();
+    //manage UI access
+    model.joinButtonDisable = true;
+},
+start: (event, model) => {
+    myConnection.startGame({});
+    //manage UI access
+    model.startButtonDisable = true;
+},
+```
+
+We do have a quality of life function left for copy(), let's finish that up.
+
+```ts
+//copies input text to clipboard
+copy: () => {
+    navigator.clipboard.writeText(model.gameID);
+},
+```
 
 We still need to figure out how we are going to access the updatePlayerVelocity() method.  Let’s tie some keyboard presses to it.
- 
+
+```ts
+const bindKeyboardEvents = () => {
+    document.addEventListener('keydown', e => {
+        switch (e.key) {
+            case 'ArrowUp':
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
+                break;
+            case 'ArrowDown':
+                //ditto
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
+                break;
+            case ' ':
+                myConnection.startRound({});
+                break;
+            default:
+                break;
+        }
+    });
+    document.addEventListener('keyup', e => {
+        switch (e.key) {
+            case 'ArrowUp':
+                //ditto
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+                break;
+            case 'ArrowDown':
+                //ditto
+                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+                break;
+
+            default:
+                break;
+        }
+    });
+};
+```
+
 This method can be called after the joinGame method is called.  This connects the last two RPCs from our server into the client.  The up and down arrows will update the players paddle velocity.  The spacebar will fire off the startRound() method.
-Adding logic to the game elements
+
+##### Adding logic to the game elements
+
 Okay, that’s quite a bit of stuff.  We have our UI bindings, the HTML framework, the RPC’s, our client is connected to the server, all that’s left is now getting the information OUT of the server so our UI can use it.  This is the client state that the impl.ts file calls out.  Remember that updateState() method we defined a long time ago?  That’s the connection for how the data is going to come out of the server when the data changes.
 Tying in the server data via updateState()
 Earlier we created a method call updateState() that we left empty.  Now its time to fill it out and review what is going on.
