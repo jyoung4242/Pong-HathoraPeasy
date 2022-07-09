@@ -207,6 +207,8 @@ A .gitignore is also initially included so you can create a repo at this time if
 ### IMPL.ts
 
 Now we’re ready to start looking at our server backend code.  Under the server directory you’ll find you implementation file, impl.ts.
+
+![Imple.ts](/tutorial/screenshots/ss11.png)
  
 This is the main code that is used for your server.  You can import and include other modules here too, if you want to break up your code, which we will do for this tutorial.  Also generated is the prototype test client which we will look at next.
 
