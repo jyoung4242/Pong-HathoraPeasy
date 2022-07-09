@@ -332,24 +332,24 @@ The joinGame method primary job is to add the Player object to the array of stat
 #### startGame:
 
 ```ts
-    startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
-        if (state.Players.length != 2) return Response.error('Invalid number of players');
-        if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
+startGame(state: InternalState, userId: string, ctx: Context, request: IStartGameRequest): Response {
+    if (state.Players.length != 2) return Response.error('Invalid number of players');
+    if (state.gameState != GameStates.WaitingToStartGame) return Response.error('Not ready to start game');
 
-        //create first ball
-        const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
-        state.Balls.push({
-            position: startPosition,
-            velocity: { x: 0, y: 0 },
-            radius: 15,
-            isColliding: false,
-        });
+    //create first ball
+    const startPosition = { x: state.Players[0].position.x + 12, y: state.Players[0].position.y + 12 };
+    state.Balls.push({
+        position: startPosition,
+        velocity: { x: 0, y: 0 },
+        radius: 15,
+        isColliding: false,
+    });
 
-        //update Gamestate
-        state.gameState = GameStates.WaitingToStartRound;
-        ctx.broadcastEvent('Ball');
-        return Response.ok();
-    }
+    //update Gamestate
+    state.gameState = GameStates.WaitingToStartRound;
+    ctx.broadcastEvent('Ball');
+    return Response.ok();
+}
 ```
 
 The startGame method primary function is to modify the game state after we add a ball into the game.  The ball is automatically added next to the left player’s paddle.
@@ -357,24 +357,23 @@ The startGame method primary function is to modify the game state after we add a
 #### startRound:
 
 ```ts
-    startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
-        //gaurd conditions
-        if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
+startRound(state: InternalState, userId: string, ctx: Context, request: IStartRoundRequest): Response {
+    //gaurd conditions
+    if (state.gameState != GameStates.WaitingToStartRound) return Response.error('Cannot start round');
 
-        //set starting angle, by which side your on
-        //if left side, angle will be between
-        let startingAngle: number;
-        if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -75, max: 75 });
-        else startingAngle = ctx.chance.integer({ min: 115, max: 255 });
-        let magnitude: number = ballSpeed;
+    //set starting angle, by which side your on
+    //if left side, angle will be between
+    let startingAngle: number;
+    if (state.Balls[0].position.x < 300) startingAngle = ctx.chance.integer({ min: -75, max: 75 });
+    else startingAngle = ctx.chance.integer({ min: 115, max: 255 });
+    let magnitude: number = ballSpeed;
 
-        let xComponent = magnitude * Math.cos(toRads(startingAngle));
-        let yComponent = magnitude * Math.sin(toRads(startingAngle));
-        state.Balls[0].velocity = { x: xComponent, y: yComponent };
-        state.gameState = GameStates.InProgress;
-        return Response.ok();
-    }
-
+    let xComponent = magnitude * Math.cos(toRads(startingAngle));
+    let yComponent = magnitude * Math.sin(toRads(startingAngle));
+    state.Balls[0].velocity = { x: xComponent, y: yComponent };
+    state.gameState = GameStates.InProgress;
+    return Response.ok();
+}
 ```
 
 The startRound method primary job is to set the initial velocity of the ball off the left player’s paddle, and to modify the game state to an active state.
@@ -382,35 +381,34 @@ The startRound method primary job is to set the initial velocity of the ball off
 #### updatePlayerPosition:
 
 ```ts
-    updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
-        if (state.gameState != GameStates.InProgress && state.gameState != GameStates.WaitingToStartRound && state.gameState != GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
+updatePlayerVelocity(state: InternalState, userId: string, ctx: Context, request: IUpdatePlayerVelocityRequest): Response {
+    if (state.gameState != GameStates.InProgress && state.gameState != GameStates.WaitingToStartRound && state.gameState != GameStates.WaitingToStartGame) return Response.error('Cannot update velocity');
 
-        let pIndex = 0;
-        if (state.Players[1]) {
-            if (userId == state.Players[1].id) pIndex = 1;
-        }
-
-        state.Players[pIndex].velocity = request.velocity;
-        return Response.ok();
+    let pIndex = 0;
+    if (state.Players[1]) {
+        if (userId == state.Players[1].id) pIndex = 1;
     }
 
+    state.Players[pIndex].velocity = request.velocity;
+    return Response.ok();
+}
 ```
 
 the updatePlayerPosition method will take the velocity vector from the client and update the global state.  
  
 #### getUserState:
 ```ts
-    getUserState(state: InternalState, userId: UserId): PlayerState {
-        let clientState: PlayerState = {
-            player1position: state.Players[0] ? state.Players[0].position : { x: 15, y: 10 },
-            player2position: state.Players[1] ? state.Players[1].position : { x: 575, y: 10 },
-            ballposition: state.Balls[0] ? state.Balls[0].position : { x: 25, y: 25 },
-            player1Lives: state.Players[0] ? state.Players[0].lives : 3,
-            player2Lives: state.Players[1] ? state.Players[1].lives : 3,
-        };
+getUserState(state: InternalState, userId: UserId): PlayerState {
+    let clientState: PlayerState = {
+        player1position: state.Players[0] ? state.Players[0].position : { x: 15, y: 10 },
+        player2position: state.Players[1] ? state.Players[1].position : { x: 575, y: 10 },
+        ballposition: state.Balls[0] ? state.Balls[0].position : { x: 25, y: 25 },
+        player1Lives: state.Players[0] ? state.Players[0].lives : 3,
+        player2Lives: state.Players[1] ? state.Players[1].lives : 3,
+    };
 
-        return clientState;
-    }
+    return clientState;
+}
 ```
 
 getUserState is an automatically generated method from Hathora, that allows the server to modify the returned state to the client based off the userID…. For example, in a card game where you don’t want each client to know the card values of all the players, you can filter the provided client state so that you don’t expose that data to each client.  This is how we will re-map player state, take note of using the ternary operator to set a default for undefined data:
@@ -421,18 +419,119 @@ The onTick method will be the engine that runs the game.  We have it set to a 50
 
 ##### Updating player paddle position
 
+```ts
+//player movement
+for (const player of state.Players) {
+    //check for players being at 'top' and 'bottom of screen
+    const hittingTop = player.position.y < 0;
+    const hittingBottom = player.position.y + player.size.y >= screenHeight;
+
+    const pixelsToMove = paddlespeed * timeDelta;
+    if (!hittingTop && player.velocity.y < 0) {
+        player.position.y += player.velocity.y * pixelsToMove;
+    } else if (!hittingBottom && player.velocity.y > 0) {
+        player.position.y += player.velocity.y * pixelsToMove;
+    }
+    if (state.gameState == GameStates.WaitingToStartRound) {
+        if (state.Balls[0].position.x < 300) {
+            //left player
+            if (player.id == state.Players[0].id) state.Balls[0].position.y += state.Players[0].velocity.y * pixelsToMove;
+        } else {
+            //right player
+            if (player.id == state.Players[1].id) state.Balls[0].position.y += state.Players[1].velocity.y * pixelsToMove;
+        }
+    }
+}
+```
+
 Based on the velocity vectors provided by each client, we will move the player paddles up or down, unless they hit the top/bottom of the screen.  Also, as a note, if we are waiting to start the next round, the ball will move up/down with the paddles.
  
-Ball physics:
-Ball movement:
+#### Ball physics:
+
+##### Ball movement:
+
 Based on the ball velocity vector, we reposition the ball for each tick…
+
+```ts
+//set each ball movement
+for (const ball of state.Balls) {
+    if (ball.velocity.x >= 0) ball.position.x += (ball.velocity.x + ballspeedAdjustment) * timeDelta;
+    else ball.position.x += (ball.velocity.x - ballspeedAdjustment) * timeDelta;
+    if (ball.velocity.y >= 0) ball.position.y += (ball.velocity.y + ballspeedAdjustment) * timeDelta;
+    else ball.position.y += (ball.velocity.y - ballspeedAdjustment) * timeDelta;
+}
+```
  
-Ball collision with player:
+##### Ball collision with player:
+
 This block of code runs a helper routine that detects overlap between balls and player paddles, and set’s each entity’s isColliding property.  If a ball is hitting, we change its velocity to send it back the other direction.  The helper routine changeVelocity takes care of that.
- 
-Ball collisions with top/bottom of screen:
+
+```ts
+//check for collisions with players
+detectCollisions(state);
+
+for (const player of state.Players) {
+    if (player.isColliding) {
+        vollies += 1;
+        for (const ball of state.Balls) {
+            if (ball.isColliding) {
+                //depending on player, change balls velocity accordingly
+                changeVelocity(ball, player);
+            }
+        }
+    }
+}
+```
+
+##### Ball collisions with top/bottom of screen:
+
 This Block performs similar evaluation, checks for collision with top and bottom of screen, and depending on that changes the velocity of the ball to send it the opposite direction.
- 
+
+```ts
+//check for balls being at 'top' and 'bottom of screen
+for (const ball of state.Balls) {
+    const hittingTop = ball.position.y <= 0;
+    const hittingBottom = ball.position.y + ball.radius >= screenHeight;
+    if (hittingTop) {
+        //updateVelocity
+        vollies += 1;
+        changeVelocity(ball, 'top');
+    } else if (hittingBottom) {
+        //updateVelocity
+        vollies += 1;
+        changeVelocity(ball, 'bottom');
+    }
+}
+```
+##### Ball collisions with left/right of screen:
+
+This Block performs similar evaluation, checks for collision with left and right of screen, and depending on that repositions the ball back on the player paddle and resets the round.  Also, lives data is updated.
+
+```ts
+//check for ball leaving screen on left/right
+for (const ball of state.Balls) {
+    const hittingLeft = ball.position.x <= 0;
+    const hittingRight = ball.position.x + ball.radius >= screenWidth;
+    if (hittingLeft) {
+        //player left decrement lives
+        state.Players[0].lives -= 1;
+        //if lives 0, game over
+        if (state.Players[0].lives == 0) {
+            ctx.broadcastEvent('Game Over');
+            state.gameState = GameStates.GameOver;
+        } else resetGame(state, 'left');
+    } else if (hittingRight) {
+        //player right decrement lives
+        state.Players[1].lives -= 1;
+        if (state.Players[1].lives == 0) {
+            ctx.broadcastEvent('Game Over');
+            state.gameState = GameStates.GameOver;
+        } else resetGame(state, 'right');
+    }
+}
+```
+
+
 Final look at prototype UI
 When you open two clients, login, joinGame, then startGame, you will see this:
  
