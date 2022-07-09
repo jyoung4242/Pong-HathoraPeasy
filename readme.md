@@ -11,6 +11,12 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 
 -   [Introduction](#👋-introduction-to-the-tutorial)
 -   [End State Objective](#end-objective)
+-   [Tools](#tools)
+-   [Hathora](#hathora-backend)
+-   [Where to Find](#where-to-find)
+-   [Workflow](#workflow)
+-   [Project Folder Setup](#project-setup)
+-   [Hathora YML](#yml)
 
 ## :trophy: End Objective
 
