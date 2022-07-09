@@ -28,12 +28,17 @@ I developed this project and tutorial on a Windows 10 system, utilizing VS code,
 ## Hathora Backend
 ### Where to find
 #### GitHub
-	- [Hathora can be found here](https://github.com/hathora/hathora)
-    There is a comprehensive readme file that helps get you started, which this tutorial essentially holds your hand through.
+- [Hathora Github](https://github.com/hathora/hathora)
+
+There is a comprehensive readme file that helps get you started, which this tutorial essentially holds your hand through.
+
 #### Documentation
-	The API documentation for Hathora can be found at https://docs.hathora.dev/#/ which is a very nice, continually updated, site that outlines everything you need to know about using this framework.
+- [API documentation for Hathora](https://docs.hathora.dev/#/)
+The API documentation for Hathora can be found here, which is a very nice, continually updated, site that outlines everything you need to know about using this framework.
+
 #### Discord
-	There is a fantastic Discord server for Hathora: https://discord.gg/3MuAdAdb, which gives you access to the team directly.  This has been critical for me and my journey with Hathora, as the team has proven very open to ideas, very responsive to any issues encountered, and overall is a great group of individuals that I’ve enjoyed interacting with.  I get updates on new features and guidance on any API breaking changes here as well, which is a plus.
+- [Hathora Disord](https://discord.gg/3MuAdAdb)
+The Hathora discord server gives you access to the team directly.  This has been critical for me and my journey with Hathora, as the team has proven very open to ideas, very responsive to any issues encountered, and overall is a great group of individuals that I’ve enjoyed interacting with.  I get updates on new features and guidance on any API breaking changes here as well, which is a plus.
 Workflow
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
 Project Setup
