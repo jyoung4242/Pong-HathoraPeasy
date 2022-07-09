@@ -779,13 +779,26 @@ Peasy-UI executes its state and compare feature by calling UI.update() method.  
 
 If you’re running a dev server, and using the styles.css file provided in the GitHub repo, the client should be looking like the screenshot shown earlier at the beginning of this section:
  	
-So our data binding to do list include: 
+So our data binding to do list included: 
 
 - Data Fields in the main title div, two for rendering, and two for the data
 
+```js
+`<div class="instructions">Pong <span \${===showID}> -> Game ID: \${gameID}</span> <span \${===showUser}> -> User: \${username}</span></div>`          
+```
+
 - Login button, click event binding, and one for the disabled property for the button
 
+```js
+`<button id="btnLogin" class="button" \${click@=>login} \${disabled <== loginButtonDisable}>Login</button>`
+```
+
 - Create Game and Connect game buttons, one binding each for the click event and one binding each for the disabled property
+
+```js
+`<button id="btnCreateGame" class="button" \${click@=>create} \${disabled <== createButtonDisable}>Create Game</button>
+<button id="btnConnectGame" class="button" \${click@=>connect} \${disabled <== connectButtonDisable}>Connect Game</button>`
+```
 
 - The Game ID field data will have a data binding, and the Copy button will have an click event binding
 
