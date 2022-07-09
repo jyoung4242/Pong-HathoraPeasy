@@ -17,6 +17,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 -   [Workflow](#workflow)
 -   [Project Folder Setup](#project-setup)
 -   [Hathora YML](#yml)
+-   [Hathora Init](#)
 
 ## :trophy: End Objective
 
@@ -116,6 +117,7 @@ Tick (from the docs)
 ![Tick Docs](/tutorial/screenshots/ss9.png)
  
 So… given that information, I’m outlining that our hathora.yml will be defined initially as follows:
+
 ```yml
 types:
     GameStates:
@@ -183,6 +185,8 @@ These will generate remote procedure calls for the clients to execute and commun
 
 We are setting our authentication to anonymous for this tutorial, and we are defining a tick event that will run every 50 milliseconds.
 
+### Generating Hathora Project
+
 Let’s try generating our Hathora project off this YAML.   In the PowerShell terminal, enter:
  
  ```bash
@@ -190,6 +194,7 @@ Let’s try generating our Hathora project off this YAML.   In the PowerShell te
  ```
 
 Now your project in the explorer should look a bit like this:
+
 ![Hathora Project Structure](/tutorial/screenshots/ss10.png)
  
 As you can see, Hathora has generated our project structure for us.  It includes all the API libraries automatically, as well as created  our server directories and our client directories.
