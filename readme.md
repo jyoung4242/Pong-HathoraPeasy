@@ -22,15 +22,17 @@ Hathora is a multiplayer networking framework that manages much of the low-level
 ### Peasy-UI
 Peasy-UI is a UI data binding Library. Peasy UI provides uncomplicated UI bindings for HTML via string templating. It's intended to be used in vanilla JavaScript/Typescript projects where using ‘createElement‘ is too cumbersome and adding a complete SPA framework is overkill or simply not desired. Thanks to the small scope of the library, performance is decent.
 
-Development Environment
+### Development Environment
 I developed this project and tutorial on a Windows 10 system, utilizing VS code, and executing all terminal commands in the node PowerShell terminal embedded in VS code.  There maybe be nuanced differences between developing on a Mac or Linux system.  Also, if using different shell applications or a different IDE, there may be subtle differences to take note of.
-Hathora Backend
-Where to find
-GitHub
-	Hathora can be found at https://github.com/hathora/hathora.  There is a comprehensive readme file that helps get you started, which this tutorial essentially holds your hand through.
-Documentation
+
+## Hathora Backend
+### Where to find
+#### GitHub
+	- [Hathora can be found here](https://github.com/hathora/hathora)
+    There is a comprehensive readme file that helps get you started, which this tutorial essentially holds your hand through.
+#### Documentation
 	The API documentation for Hathora can be found at https://docs.hathora.dev/#/ which is a very nice, continually updated, site that outlines everything you need to know about using this framework.
-Discord
+#### Discord
 	There is a fantastic Discord server for Hathora: https://discord.gg/3MuAdAdb, which gives you access to the team directly.  This has been critical for me and my journey with Hathora, as the team has proven very open to ideas, very responsive to any issues encountered, and overall is a great group of individuals that I’ve enjoyed interacting with.  I get updates on new features and guidance on any API breaking changes here as well, which is a plus.
 Workflow
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
