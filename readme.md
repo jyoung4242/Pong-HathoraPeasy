@@ -175,7 +175,7 @@ Also on the Ball type, we define a radius integer, which will be used for collis
 
 Player type will outline all the characteristics of each player that connects, including an id, the number of lives remaining, and the position of the players paddle on the screen.  Also velocity for each player will be managed as well as the isColliding flag
 
-The Player State type is important, as we separate the collective state that the server monitors from what data is broadcast to each client on change.  So, each client will understand and be able to monitor changes in the balls’ entities, and the players’ entities.  When the Server state data changes, the data gets remapped into Player State prior to being pushed to clients
+The Player State type is important, as we separate the collective state that the server monitors from what data is broadcast to each client on change.  So, each client will understand and be able to monitor changes in the balls’ entities, and the players’ entities.  When the Server state data changes, the data gets remapped into Player State prior to being pushed to clients.  The reason we seperate the overall Server state from the Player state is that there ususually is data that the Server monitors for state changes that we don't want each client to see.  A good example is a game of Poker;  the server needs to monitor ALL the players hands, but only needs to broadcast to each client their respective hand data.  This took me awhile to understand, but there's two aspects to this, we should ONLY send he minimum amount of data to the client that it needs to operate, and we shouldn't burden the client with data that should be hidden, and then expect the client code to do the sorting.
 
 There are four methods we’re defining for this, updatePlayerPosition, joinGame, startRound and startGame.
 
@@ -185,6 +185,10 @@ We are setting our authentication to anonymous for this tutorial, and we are def
 
 Let’s try generating our Hathora project off this YAML.   In the PowerShell terminal, enter:
  
+ ```bash
+ hathora init
+ ```
+
 Now your project in the explorer should look a bit like this:
  
 As you can see, Hathora has generated our project structure for us.  It includes all the API libraries automatically, as well as created  our server directories and our client directories.
