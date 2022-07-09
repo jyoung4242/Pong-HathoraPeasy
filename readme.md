@@ -190,6 +190,7 @@ Let’s try generating our Hathora project off this YAML.   In the PowerShell te
  ```
 
 Now your project in the explorer should look a bit like this:
+![Hathora Project Structure](/tutorial/screenshots/ss10.png)
  
 As you can see, Hathora has generated our project structure for us.  It includes all the API libraries automatically, as well as created  our server directories and our client directories.
 A .gitignore is also initially included so you can create a repo at this time if you would like.  For your reference, mine is at https://github.com/jyoung4242/Pong-HathoraPeasy
