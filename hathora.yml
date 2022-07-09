@@ -21,10 +21,6 @@ types:
         size: Vector
         velocity: Vector
         isColliding: boolean
-    ServerState:
-        Players: Player[]
-        Balls: Ball[]
-        gameState: GameStates
     PlayerState:
         player1position: Vector
         player2position: Vector
