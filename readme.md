@@ -32,6 +32,11 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
     -   [Custom UI](#custom-ui)
 -   [Peasy-UI](#peasy-ui-front-end)
     -   [Where to Find](#where-to-find-1)
+    -   [Data Bindings](#data-bindings)
+    -   [Custom UI](#custom-ui-overview)
+-   [Tutorial Workflow](#tutorial-workflow)
+    -   [Creating client project](#creating-custom-ui-project-in-hathora-framework)
+    -   [Installing and importing Peasy-UI](#installing-and-importing-peasy-ui)
 
 ## :trophy: End Objective
 
@@ -886,6 +891,8 @@ We can add the remaining data bindings now. Let’s update the data model object
     ballvisible: false,
 };
 ```
+
+#### Connecting the client
 
 Now our data bindings are complete, and now we can connect Hathora to our client.
 Connecting the custom client to the server
