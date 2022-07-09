@@ -27,9 +27,11 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
         -   [Start Game](#startgame)
         -   [Start Round](#startround)
         -   [UpdatePlayerPosition](#updateplayerposition)
-        -   [getUserState](#getuserstate)
-        -   [onTick](#ontick)
+        -   [Get User State](#getuserstate)
+        -   [TickS](#ontick)
     -   [Custom UI](#custom-ui)
+-   [Peasy-UI](#peasy-ui-front-end)
+    -   [Where to Find](#where-to-find-1)
 
 ## :trophy: End Objective
 
@@ -550,24 +552,46 @@ As you can see in both client instances, they are separately logged in as two di
 
 If the RPC (remote procedure call) is fired off to start the round, you will start seeing the onTick method updating the ball position, and the velocity will update if the ball collides with a wall or paddle.  If the ball hits the edges of the screen, the position of the ball will be reset, and the game state will change.
 
-## Custom UI
+### Custom UI
 
 So… now in theory, our backend server code is done.  And we can exercise it with our prototype UI code, but what if we want to create our own custom front end UI that does this?  Let’s start looking into that now.
-Peasy-UI Front End
-Why Peasy-UI?
-I chose to use Peasy-UI for a few reasons.   I liked that its pure Typescript, and that I can bundle it down to an html file and a JS file.  Easy to deploy, as there are no complicated build steps required to generate it, as we are simply using the webpack bundler.  It also doesn’t have as much overhead as say Angular, React, or other SPA frameworks.
-Also, it provides a really clean way of abstracting UI code from the business logic and creates a bit of separation in the codebase.
-Where to find
-GitHub https://github.com/peasy-ui/peasy-ui
-NPM: https://www.npmjs.com/package/peasy-ui
 
-Data Bindings
+## Peasy-UI Front End
+
+### Why Peasy-UI?
+
+I chose to use Peasy-UI for a few reasons.   I liked that its pure Typescript, and that I can bundle it down to an html file and a JS file.  Easy to deploy, as there are no complicated build steps required to generate it, as we are simply using the webpack bundler.  It also doesn’t have as much overhead as say Angular, React, or other SPA frameworks.
+
+Also, it provides a really clean way of abstracting UI code from the business logic and creates a bit of separation in the codebase.
+
+#### Where to find
+##### GitHub https://github.com/peasy-ui/peasy-ui
+##### NPM: https://www.npmjs.com/package/peasy-ui
+
+#### Data Bindings
+
 The data bindings work through the string templating code.  We will provide the library a string template of the HTML directly and embed that template with ‘bindings’ that will be parsed out and monitored for change of state.
+
 For Peasy-UI to work, you must pass the library a template and a data model object, or ‘state’.   The template will make references to the state object passed, and that is what you modify to update your UI.  A very quick example to outline this:
+
+```ts
+const template = `
+    <input type="radio" \${'red' ==> color} \${change @=> changedColor}> Red
+    <input type="radio" \${'green' ==> color} \${change @=> changedColor}> Green
+    `;
+const model = {
+    color: 'red';
+    changedColor: (event, model) => alert(`Changed color to ${model.color}.`),
+};
+```
  
 The template string being used has two input radio buttons.  You can see a data binding on the color property of the model object, and a binding on the onChange event of the radio button.
+
 In this binding patter, the radio button sends the radio button value attribute of either ‘red’ or ‘green’ to the color property when active.  When the onChange event is fired, you see the method changedColor() is ran.
+
 This is just a small slice of the binding patters. Here is an outline of the available patterns from the Peasy-UI readme.
+
+```bash
 ${attr <== prop}    Binding from model property to element attribute
 ${attr <=| prop}    One-time binding from model property to element attribute
 ${attr ==> prop}    Binding from element attribute to model property
@@ -586,61 +610,195 @@ ${ === prop}        Binding that renders the element if model property is true
 ${ !== prop}        Binding that renders the element if model property is false
 
 ${alias <=* list}   Binding from model list property to view template alias for each item in the list
+```
 
-Custom UI overview
+#### Custom UI overview
+
 To simplify this as much as possible, I will create simple template.html file that renders all my index.ts code.  
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Pong: hathora & peasy-UI</title>
+    </head>
+    <body>
+        <div id="myApp"></div>
+    </body>
+</html>
+```
+
 I will have a login button, a create Game button and connect to Game button, and then the playing field will be available with buttons to allow for joining the game, starting the game, and keyboard bindings for updating velocity, and spacebar for starting the round.  Kind of something like this:
+
+![Client custom UI](/tutorial/screenshots/ss18.png)
  
-Tutorial Workflow
-Creating custom UI project in Hathora framework
+#### Tutorial Workflow
+
+##### Creating custom UI project in Hathora framework
 Step one in creating a custom UI for Hathora is to create the web directory under the Hathora client folder.
+  
+![Client custom UI](/tutorial/screenshots/ss19.png)
  
 This folder will house the entire client project, so we can treat that as our new root directory for our client.  I use a .bat script to setup new projects, its available for you to use as well.  It can be found at:
-https://github.com/jyoung4242/webpackBootstrapper
+
+-   [Webpack Bootstrapper](https://github.com/jyoung4242/webpackBootstrapper)
+
 and I just place the webpack starter file (webpackstarter.bat) in the web directory and run it from the node PowerShell terminal.  Make sure you change your directory appropriately.
  
 Again, this is an optional path I use as a shortcut, you are welcome to create your client project as you see fit, I don’t believe it should matter with regards to the tutorial.  After I run the bat file and set it to T for typescript, my directory looks like this.
- 
+
+![client web project file structure](/tutorial/screenshots/ss20.png)
+
 The batch file will automatically start up the dev server to start running the client.
-We need to make sure we update our tsconfig.json and webpack.config.js files, and there’s one more support package we need.  Run this npm command in the Powershell.
+We need to make sure we update our tsconfig.json and webpack.config.js files.
  
 tsconfig.json:
  
+```ts
+{
+    "compilerOptions": {
+        "outDir": "./build/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "es6",
+        "target": "es2020",
+        "jsx": "react",
+        "allowJs": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
+    }
+}
+```
 
 webpack.config.json
- 
-Installing and importing Peasy-UI
-Cancel out of the dev server running, and let’s install Peasy-UI.
- 
+
+```ts
+const path = require('path');
+const mode = process.env.NODE_ENV == 'production' ? 'production' : 'development';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+module.exports = {
+    entry: {
+        index: path.resolve(__dirname, './src/index.ts'),
+    },
+    output: {
+        path: path.resolve(__dirname, './build'),
+        filename: '[name].bundle.js',
+    },
+    mode: mode,
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+        ],
+    },
+    devtool: 'inline-source-map',
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    devtool: 'inline-source-map',
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, './src/template.html'),
+        }),
+        new webpack.EnvironmentPlugin({ COORDINATOR_HOST: 'coordinator.hathora.dev', MATCHMAKER_HOST: 'matchmaker.hathora.com' }),
+    ],
+};
+```
+
+#### Installing and importing Peasy-UI
+
+Cancel out of the dev server running (Ctrl+C), and let’s install Peasy-UI.
+
+```bash
+npm i peasy-ui
+```
+
 Let’s import Peasy-UI, open index.ts file in your client project.
  
-Creating string template and data model
+```ts
+import { UI, UIView } from 'peasy-ui';
+```
+
+#### Creating string template and data model
 Now that we have access to UI, and UIView, we can define our string template and model object.
+
+```js
+const template = `
+        <div>
+          <div class="instructions">Pong <span \${===showID}> -> Game ID: \${gameID}</span> <span \${===showUser}> -> User: \${username}</span></div>
+          
+          <div class="flex small_width">
+            <button id="btnLogin" class="button" \${click@=>login} \${disabled <== loginButtonDisable}>Login</button>
+          </div>
+
+          <div class="flex startLeft large_width">
+            <button id="btnCreateGame" class="button" \${click@=>create} \${disabled <== createButtonDisable}>Create Game</button>
+            <button id="btnConnectGame" class="button" \${click@=>connect} \${disabled <== connectButtonDisable}>Connect Game</button>
+            <label for="gameJoinID">Game ID</label>
+            <input id="gameJoinID" type="text" \${value <=> gameID}></input>
+            <button id="btnCopy" class="button" \${click@=>copy} }>Copy</button>
+          </div>
+
+          <div class="flex startLeft large_width">
+            <button id="btnJoinGame" class="button" \${click@=>join} \${disabled <== joinButtonDisable}>Join Game</button>
+            <button id="btnStartGame"  class="button" \${click@=>start} \${disabled <== startButtonDisable}>Start Game</button>
+          </div>
+
+          <div class="instructions">Up/Down arrows move paddle, spacebar launches ball</div>
+
+          <div id='playArea' class="gameArea">
+            <div class="p1score" \${ === player1Joined} >P1: Lives: \${p1Lives}</div>
+            <div class="p2score" \${ === player2Joined}>P2: Lives: \${p2Lives}</div>
+            <div id="p1" \${ === player1Joined} class="p1" style="transform: translate(\${player1pos.x}px,\${player1pos.y}px)"></div>
+            <div id="p2" \${ === player2Joined} class="p2" style="transform: translate(\${player2pos.x}px,\${player2pos.y}px)"></div>
+            <div id="ball" \${ === ballvisible} class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px)"></div>
+          </div>
+        </div>
+      `;
+```
  
 The string template will create several sections of the HTML elements, very simplistic, and I pass the HTML straight to the UI.create() method, with the parent element, and the data model, which for now is empty, but that will change.  The myApp parameter is defined and captured by using getElementByID for the parent div in the template HTML.
  
 Peasy-UI executes its state and compare feature by calling UI.update() method.  To have this run in the background and monitor and react to changes in state, we will create a Interval to call UI.update() periodically.
  
-Creating data bindings
-If you’re running a dev server, and using the styles.css file provided in the GitHub repo, the client should be looking like this currently:
+#### Creating data bindings
+
+If you’re running a dev server, and using the styles.css file provided in the GitHub repo, the client should be looking like the screenshot shown earlier at the beginning of this section:
  	
 So our data binding to do list include: 
-•	Data Fields in the main title div, two for rendering, and two for the data
-•	Login button, click event binding, and one for the disabled property for the button
-•	Create Game and Connect game buttons, one binding each for the click event and one binding each for the disabled property
-•	The Game ID field data will have a data binding, and the Copy button will have an click event binding
-•	The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
-•	The Game area will have several bindings itself:
-o	The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
-o	The player paddles will each have their rendering bindings, and their CSS transform data field bindings
-o	The ball will have its own rendering binding, and its CSS transform data binding
+
+-Data Fields in the main title div, two for rendering, and two for the data
+-Login button, click event binding, and one for the disabled property for the button
+-Create Game and Connect game buttons, one binding each for the click event and one binding each for the disabled property
+-The Game ID field data will have a data binding, and the Copy button will have an click event binding
+-The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
+-The Game area will have several bindings itself:
+    -   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
+    -   The player paddles will each have their rendering bindings, and their CSS transform data field bindings
+    -   The ball will have its own rendering binding, and its CSS transform data binding
+
 Event bindings: ${event @=> method}
 Data bindings: ${data}
 Rendering bindings: ${===property}
 One-way attribute binding: ${disabled<==getDisabledButton}
 Two-way attribute binding: ${value<=>data}
 Let’s add the rest of the event bindings, we can update the code logic when ready.
- 
+
+
 We now have our events mocked up.  Once we connect the client to the Hathora server, we’ll fill in the events will the remote procedure calls.
 We can add the remaining data bindings now. Let’s update the data model object:
  
