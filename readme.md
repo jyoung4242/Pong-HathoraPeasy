@@ -110,6 +110,54 @@ Tick (from the docs)
 ![Tick Docs](/tutorial/screenshots/ss9.png)
  
 So… given that information, I’m outlining that our hathora.yml will be defined initially as follows:
+```yml
+types:
+    GameStates:
+        - Idle
+        - PlayersJoining
+        - WaitingToStartGame
+        - WaitingToStartRound
+        - InProgress
+        - GameOver
+    Vector:
+        x: float
+        y: float
+    Ball:
+        position: Vector
+        velocity: Vector
+        radius: int
+        isColliding: boolean
+    Player:
+        id: UserId
+        lives: int
+        position: Vector
+        size: Vector
+        velocity: Vector
+        isColliding: boolean
+    PlayerState:
+        player1position: Vector
+        player2position: Vector
+        ballposition: Vector
+        player1Lives: int
+        player2Lives: int
+
+methods:
+    updatePlayerVelocity:
+        velocity: Vector
+    startRound:
+    joinGame:
+    startGame:
+
+auth:
+    anonymous: {}
+
+userState: PlayerState
+
+error: string
+
+tick: 50
+
+```
  
 Let’s step through the ‘why’ on this.  Under types, were outlining several types that we want the server to manage: Vector, Ball, Player, Game States, Server State and Player State.  
 GameStates is a type that lets us use a simple state condition to track our progress through the server, we will use this to create ‘guard’ conditions so we can ensure random procedure calls only are listened to at the right time
