@@ -3,7 +3,12 @@ import { Response } from '../api/base';
 import { Vector, Ball, Player, PlayerState, UserId, IInitializeRequest, IJoinGameRequest, IStartGameRequest, IStartRoundRequest, GameStates, IUpdatePlayerVelocityRequest, ServerState } from '../api/types';
 import { changeVelocity, detectCollisions, resetGame, toRads } from './helper';
 
-type InternalState = ServerState;
+type InternalState = {
+    Players: Player[],
+    Balls: Ball[],
+    gameState: GameStates,
+}
+
 const screenHeight = 400;
 const screenWidth = 600;
 const firstPlayerX = 15;
