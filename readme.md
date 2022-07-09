@@ -18,6 +18,8 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 -   [Project Folder Setup](#project-setup)
 -   [Hathora YML](#yml)
 -   [Hathora Init](#generating-hathora-project)
+-   [IMPL.ts file](#implts)
+-   [Prototype UI client](#prototype-test-client)
 
 ## :trophy: End Objective
 
@@ -198,15 +200,25 @@ Now your project in the explorer should look a bit like this:
 ![Hathora Project Structure](/tutorial/screenshots/ss10.png)
  
 As you can see, Hathora has generated our project structure for us.  It includes all the API libraries automatically, as well as created  our server directories and our client directories.
-A .gitignore is also initially included so you can create a repo at this time if you would like.  For your reference, mine is at https://github.com/jyoung4242/Pong-HathoraPeasy
-IMPL
+A .gitignore is also initially included so you can create a repo at this time if you would like.  For your reference, mine is at 
+
+- [Tutorial GitHub Link](http://github.com/jyoung4242/Pong-HathoraPeasy)
+
+### IMPL.ts
+
 Now we’re ready to start looking at our server backend code.  Under the server directory you’ll find you implementation file, impl.ts.
  
 This is the main code that is used for your server.  You can import and include other modules here too, if you want to break up your code, which we will do for this tutorial.  Also generated is the prototype test client which we will look at next.
-Prototype Test Client
+
+### Prototype Test Client
+
 I’m now going to introduce you to the prototype UI client tool which is provided by Hathora.  We can use this tool to quickly iterate over the server logic in the impl.ts file.  This section will show the UI and its interface but know that we will be using it to fill out the server code.
 From the PowerShell terminal, type: 
  
+```bash
+hathora dev
+```
+
 Congratulations, you have a client/server setup running!  Yay!
 This will launch the prototype UI tool, built into Hathora, which allows you to quickly mockup your server methods.  It also launches the server so that the prototype UI can connect to it and test it.  The client UI is running at http://localhost:3000/.  You may need to open your default browser and navigate to this URL directly.
 It is automatically connecting to your server running out of VS code, and will look like this:
