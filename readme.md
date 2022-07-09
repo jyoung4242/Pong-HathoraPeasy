@@ -802,14 +802,38 @@ So our data binding to do list included:
 
 - The Game ID field data will have a data binding, and the Copy button will have an click event binding
 
+```js
+`<input id="gameJoinID" type="text" \${value <=> gameID}></input>
+<button id="btnCopy" class="button" \${click@=>copy} }>Copy</button>`
+```
+
 - The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
 
+```js
+`<div class="flex startLeft large_width">
+<button id="btnJoinGame" class="button" \${click@=>join} \${disabled <== joinButtonDisable}>Join Game</button>
+<button id="btnStartGame"  class="button" \${click@=>start} \${disabled <== startButtonDisable}>Start Game</button>
+</div>`
+```
+
 - The Game area will have several bindings itself:
+
+```js
+`<div id='playArea' class="gameArea">
+<div class="p1score" \${ === player1Joined} >P1: Lives: \${p1Lives}</div>
+<div class="p2score" \${ === player2Joined}>P2: Lives: \${p2Lives}</div>
+<div id="p1" \${ === player1Joined} class="p1" style="transform: translate(\${player1pos.x}px,\${player1pos.y}px)"></div>
+<div id="p2" \${ === player2Joined} class="p2" style="transform: translate(\${player2pos.x}px,\${player2pos.y}px)"></div>
+<div id="ball" \${ === ballvisible} class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px)"></div>
+</div>`
+```
     -   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
 
     -   The player paddles will each have their rendering bindings, and their CSS transform data field bindings
 
     -   The ball will have its own rendering binding, and its CSS transform data binding
+
+The different bindings are represented by these patterns:
 
 Event bindings: ${event @=> method}
 
@@ -836,6 +860,34 @@ const model = {
 We now have our events mocked up.  Once we connect the client to the Hathora server, we’ll fill in the events will the remote procedure calls.
 We can add the remaining data bindings now. Let’s update the data model object:
  
+```ts
+    title: '',
+    gameID: '',
+    username: '',
+    player1pos: { x: 15, y: 10 },
+    player2pos: { x: 575, y: 10 },
+    ball: { x: 25, y: 25 },
+    p1Lives: 3,
+    p2Lives: 3,
+    get loginButtonDisable() {
+        return this.username.length > 0;
+    },
+    get showID() {
+        return this.gameID.length > 0;
+    },
+    get showUser() {
+        return this.username.length > 0;
+    },
+    createButtonDisable: true,
+    connectButtonDisable: true,
+    joinButtonDisable: true,
+    startButtonDisable: true,
+    player1Joined: false,
+    player2Joined: false,
+    ballvisible: false,
+};
+```
+
 Now our data bindings are complete, and now we can connect Hathora to our client.
 Connecting the custom client to the server
 This section is going to import the Hathora Client module, as well as fill in the logic for the Login, Create Game, and Connect Game buttons.
