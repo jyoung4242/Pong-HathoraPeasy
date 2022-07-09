@@ -54,6 +54,10 @@ This is the true beginning of the tutorial, and we will start with the backend s
 
 First, let’s start with a blank project.   I will be using VS code editor for this tutorial.  We will create a new folder; I am calling mine Pong HathoraPeasy.  This tutorial also assumes you have node.js installed.  If you don’t, you can go to https://nodejs.org/ and download and install node.js.
 Open the terminal window in the editor, CTRL + J, will work as the shortcut. Here I will type:
+
+```bash
+npm install -g hathora
+```
  
 This will install the Hathora NPM package from the internet.  After that installation is complete, we will create a new file, hathora.yml, in the root of our new project folder.
  
