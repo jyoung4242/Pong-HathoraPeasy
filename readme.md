@@ -12,7 +12,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 -   [Introduction](#👋-introduction-to-the-tutorial)
 -   [End State Objective](#end-objective)
 
-## End Objective
+## :trophy: End Objective
 
 The end state for this tutorial is a deployed client on Netlify that runs the client code that connects to the Hathora backend server.   It takes two players who can join the game, and each player has three lives.  The ball bounces around until it leaves the screen on either side, and that player loses a life each time.  When all the lives are gone, the game ends.  
 Tools
