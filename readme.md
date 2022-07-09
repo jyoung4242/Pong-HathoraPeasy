@@ -799,12 +799,26 @@ So our data binding to do list include:
     -   The ball will have its own rendering binding, and its CSS transform data binding
 
 Event bindings: ${event @=> method}
+
 Data bindings: ${data}
+
 Rendering bindings: ${===property}
+
 One-way attribute binding: ${disabled<==getDisabledButton}
+
 Two-way attribute binding: ${value<=>data}
+
 Let’s add the rest of the event bindings, we can update the code logic when ready.
 
+```ts
+const model = {
+    login: () => {},
+    create: () => {},
+    connect: () => {},
+    join: () => {},
+    start: () => {},
+    copy: () => {},
+```
 
 We now have our events mocked up.  Once we connect the client to the Hathora server, we’ll fill in the events will the remote procedure calls.
 We can add the remaining data bindings now. Let’s update the data model object:
