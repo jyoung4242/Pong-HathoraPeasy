@@ -239,9 +239,12 @@ You will notice in the top right, that Hathora, as an anonymous login, will assi
 
 Click the Create New button.  The prototype UI client should now look like this:
  
+![UI Logged In](/tutorial/screenshots/ss14.png)
 
 You get a view of the client state that’s pushed down to each client, and a button that gives  you access to the defined methods from hathora.yml.  Clicking the ‘methods’ button will expand a list of available remote procedure calls, ‘methods’ that you can send to the server, with the necessary data fields:
- 
+
+![UI Game Created](/tutorial/screenshots/ss15.png)
+
 This is how you’re going to rapidly create your server logic and test it iteratively 
 IMPORTANT NOTE: if you are updating your logic, you’ll have to close the server, save your updates, and restart it so it compiles your changes.  I recommend using 
  
