@@ -47,9 +47,8 @@ The Hathora discord server gives you access to the team directly.  This has been
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
 
 ### Project Setup
-<img align="center" width="300px" src="/tutorial/screenshots/ss1.png"/>
-![Screenshot1](/tutorial/screenshots/ss1.png?raw=true)
- 
+<img align="center" width="300px" src="/tutorial/screenshots/ss1.png"></img>
+
 #### Initial Project Folder
 
 First, let’s start with a blank project.   I will be using VS code editor for this tutorial.  We will create a new folder; I am calling mine Pong HathoraPeasy.  This tutorial also assumes you have node.js installed.  If you don’t, you can go to https://nodejs.org/ and download and install node.js.
