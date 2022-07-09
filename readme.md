@@ -781,15 +781,15 @@ If you’re running a dev server, and using the styles.css file provided in the 
  	
 So our data binding to do list include: 
 
--Data Fields in the main title div, two for rendering, and two for the data
+- Data Fields in the main title div, two for rendering, and two for the data
 
--Login button, click event binding, and one for the disabled property for the button
+- Login button, click event binding, and one for the disabled property for the button
 
--Create Game and Connect game buttons, one binding each for the click event and one binding each for the disabled property
+- Create Game and Connect game buttons, one binding each for the click event and one binding each for the disabled property
 
--The Game ID field data will have a data binding, and the Copy button will have an click event binding
+- The Game ID field data will have a data binding, and the Copy button will have an click event binding
 
--The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
+- The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
 
 - The Game area will have several bindings itself:
     -   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
