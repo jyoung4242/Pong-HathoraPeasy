@@ -48,7 +48,7 @@ This is the true beginning of the tutorial, and we will start with the backend s
 
 ### Project Setup
 <p align="center">
-<img width="300px" src="/tutorial/screenshots/ss1.png"></img>
+    <img src="/tutorial/screenshots/ss1.png"></img>
 </p>
 #### Initial Project Folder
 
