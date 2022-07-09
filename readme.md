@@ -827,11 +827,10 @@ So our data binding to do list included:
 <div id="ball" \${ === ballvisible} class="ball" style="transform: translate(\${ball.x}px,\${ball.y}px)"></div>
 </div>`
 ```
-    -   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
 
-    -   The player paddles will each have their rendering bindings, and their CSS transform data field bindings
-
-    -   The ball will have its own rendering binding, and its CSS transform data binding
+-   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
+-   The player paddles will each have their rendering bindings, and their CSS transform data field bindings
+-   The ball will have its own rendering binding, and its CSS transform data binding
 
 The different bindings are represented by these patterns:
 
