@@ -531,10 +531,11 @@ for (const ball of state.Balls) {
 }
 ```
 
-
 Final look at prototype UI
 When you open two clients, login, joinGame, then startGame, you will see this:
- 
+
+![Proto UI Complete](/tutorial/screenshots/ss17.png)
+
 As you can see in both client instances, they are separately logged in as two different id’s.  But you can see both users in the ‘state’ data that is being pushed down to each client.  
 If the RPC (remote procedure call) is fired off to start the round, you will start seeing the onTick method updating the ball position, and the velocity will update if the ball collides with a wall or paddle.  If the ball hits the edges of the screen, the position of the ball will be reset, and the game state will change.
 Custom UI
