@@ -68,7 +68,9 @@ The hathora.yml is a critically important file.  A “yaml” file is a human-re
 According to Wikipedia:  
 
 ```
-It is commonly used for configuration files and in applications where data is being stored or transmitted. YAML targets many of the same communications applications as Extensible Markup Language (XML)…
+It is commonly used for configuration files and in applications where data is being stored or transmitted. 
+
+YAML targets many of the same communications applications as Extensible Markup Language (XML)…
 ```
 
 Before Hathora, I didn’t know what a YML file was, so… this was all new to me.
@@ -81,14 +83,12 @@ These sections will have to be addressed prior to asking Hathora to parse it.
 
 Types (from the docs)
 
-```
-The types section is used to define the API data objects.
-
-Supported types include string, int, float, boolean, enum, optional, array, object, and union. There is also a special UserId type available.
-``` 
+![Types Docs](/tutorial/screenshots/ss3.png)
 
 Methods (from the docs)
- 
+
+![Methods Docs](/tutorial/screenshots/ss4.png)
+
 Auth (from the docs)
  
 userState (from the docs)
