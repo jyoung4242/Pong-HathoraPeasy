@@ -791,8 +791,7 @@ So our data binding to do list include:
 
 -The Join Game and Start Game buttons will both have an click event binding and their disabled properties tied to bindings
 
--The Game area will have several bindings itself:
-    
+- The Game area will have several bindings itself:
     -   The fields for how many lives each player possess, will have a rendering binding and the data field will have a binding, 1 for each player
 
     -   The player paddles will each have their rendering bindings, and their CSS transform data field bindings
