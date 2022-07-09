@@ -165,15 +165,24 @@ tick: 50
 
 ```
  
-Let’s step through the ‘why’ on this.  Under types, were outlining several types that we want the server to manage: Vector, Ball, Player, Game States, Server State and Player State.  
+Let’s step through the ‘why’ on this.  Under types, were outlining several types that we want the server to manage: Vector, Ball, Player, Game States,and Player State.  
+
 GameStates is a type that lets us use a simple state condition to track our progress through the server, we will use this to create ‘guard’ conditions so we can ensure random procedure calls only are listened to at the right time
+
 Vector is a type that will have an (x,y) as integers being tracked.  This will be used for the Ball entity type that we’ve outlined, as a ball type will have a vector signifying its position and velocity.  
+
 Also on the Ball type, we define a radius integer, which will be used for collision detection.  The position and velocity are used for managing the movement of the ball, and there is a flag isColliding for collision detection.
+
 Player type will outline all the characteristics of each player that connects, including an id, the number of lives remaining, and the position of the players paddle on the screen.  Also velocity for each player will be managed as well as the isColliding flag
-The Player State and Server State types are important, as we designate each type for what data the server monitors and broadcasts to each client on change.  So, each client will understand and be able to monitor changes in the balls’ entities, and the players’ entities.  When the Server State data changes, the data gets remapped into Player State prior to being pushed to clients
+
+The Player State type is important, as we separate the collective state that the server monitors from what data is broadcast to each client on change.  So, each client will understand and be able to monitor changes in the balls’ entities, and the players’ entities.  When the Server state data changes, the data gets remapped into Player State prior to being pushed to clients
+
 There are four methods we’re defining for this, updatePlayerPosition, joinGame, startRound and startGame.
+
 These will generate remote procedure calls for the clients to execute and communicate events to the server.
+
 We are setting our authentication to anonymous for this tutorial, and we are defining a tick event that will run every 50 milliseconds.
+
 Let’s try generating our Hathora project off this YAML.   In the PowerShell terminal, enter:
  
 Now your project in the explorer should look a bit like this:
