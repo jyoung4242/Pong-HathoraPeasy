@@ -41,11 +41,17 @@ The API documentation for Hathora can be found here, which is a very nice, conti
 - [Hathora Disord](https://discord.gg/3MuAdAdb)
 
 The Hathora discord server gives you access to the team directly.  This has been critical for me and my journey with Hathora, as the team has proven very open to ideas, very responsive to any issues encountered, and overall is a great group of individuals that I’ve enjoyed interacting with.  I get updates on new features and guidance on any API breaking changes here as well, which is a plus.
-Workflow
+
+## Workflow
+
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
-Project Setup
+
+### Project Setup
+
+![Screenshot1](/tutorial/screenshots/ss1.png?raw=true)
  
-Initial Project Folder
+#### Initial Project Folder
+
 First, let’s start with a blank project.   I will be using VS code editor for this tutorial.  We will create a new folder; I am calling mine Pong HathoraPeasy.  This tutorial also assumes you have node.js installed.  If you don’t, you can go to https://nodejs.org/ and download and install node.js.
 Open the terminal window in the editor, CTRL + J, will work as the shortcut. Here I will type:
  
