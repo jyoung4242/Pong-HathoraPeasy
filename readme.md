@@ -3,11 +3,11 @@
 
 <h1 align="center">Tutorial for Hathora Back End/Peasy-UI Front End</h1>
 
-# 👋 Introduction to the tutorial
+# :wave: Introduction to the tutorial
 
 This tutorial was penned to provide a simple example of how the Hathora framework can be utilized to quickly create a multiplayer backend game server.  With that, this tutorial showcases Peasy-UI framework to create a custom UI for the clients to connect to that server.  The game being created for this example is a simple Pong game.  This tutorial uses a state machine, simple physics and collision detection/resolution, and game state.  The game state will be bound to UI components via Peasy-UI.
 
-## Table of Contents (Links)
+## :clipboard: Table of Contents (Links)
 
 -   [Introduction](#👋-introduction-to-the-tutorial)
 -   [End State Objective](#end-objective)
