@@ -222,13 +222,21 @@ hathora dev
 ```
 
 Congratulations, you have a client/server setup running!  Yay!
-This will launch the prototype UI tool, built into Hathora, which allows you to quickly mockup your server methods.  It also launches the server so that the prototype UI can connect to it and test it.  The client UI is running at http://localhost:3000/.  You may need to open your default browser and navigate to this URL directly.
-It is automatically connecting to your server running out of VS code, and will look like this:
+
+This will launch the prototype UI tool, built into Hathora, which allows you to quickly mockup your server methods.  It also launches the server so that the prototype UI can connect to it and test it.  
+
+The client UI is running at http://localhost:3000/.  You may need to open your default browser and navigate to this URL directly.  It is automatically connecting to your server running out of VS code, and will look like this:
  
+![ProtoType UI](/tutorial/screenshots/ss12.png)
+
 You will see the authentication login button has anonymous set in the text, this is because of our auth setting in the hathora.yml file.
+
 If you click the login button, you will find something like this:
- 
+
+![UI Logged In](/tutorial/screenshots/ss13.png)
+
 You will notice in the top right, that Hathora, as an anonymous login, will assign you a random user ID, in this case its miniature-violet-tahr.  This changes every time you login, anonymously.  The UI gives you a few options here, you can create a new game instance, join and existing game, or use Hathora’s built in matchmaking functionality, which we will not get into during this tutorial.
+
 Click the Create New button.  The prototype UI client should now look like this:
  
 
