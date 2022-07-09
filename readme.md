@@ -47,7 +47,7 @@ The Hathora discord server gives you access to the team directly.  This has been
 This is the true beginning of the tutorial, and we will start with the backend server using Hathora first.
 
 ### Project Setup
-
+<img align="center" width="300px" src="/tutorial/screenshots/ss1.png"/>
 ![Screenshot1](/tutorial/screenshots/ss1.png?raw=true)
  
 #### Initial Project Folder
