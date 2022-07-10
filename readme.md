@@ -82,7 +82,7 @@ I assume that you have some inkling about networked games and clients and server
 
 Probably most important assumption.  I assume that you are using the tutorial source code in my GitHub as a reference.  This tutuorial reviews most of the code, but specifically highlights of the code.  There are support variables, utility functions, and constants that haven't been covered in detail, but it will be all in the tutorial files.
 
-![GitHub Repo](http://github.com/jyoung4242/Pong-HathoraPeasy)
+[GitHub Repo](http://github.com/jyoung4242/Pong-HathoraPeasy)
 
 I assume that these are all of my assumptions, with that, let's dive into it.
 
@@ -338,7 +338,7 @@ let vollies = 0;
 
 And another reminder, that this tutorial does not cover the project line by line, so please reference the GitHub repo for the working source code, the impl.ts and index.ts code for both the server and client are fully completed and fully commented in the repo.  Also, you will find that the impl.ts file imports a helper.ts file, which is provided in the GitHub repo, and the client index.ts file uses styles.css, which is provide in the repo as well.
 
-![GitHub Repo](http://github.com/jyoung4242/Pong-HathoraPeasy)
+[GitHub Repo](http://github.com/jyoung4242/Pong-HathoraPeasy)
 
 #### InternalState:  
 
