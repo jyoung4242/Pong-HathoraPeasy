@@ -1236,7 +1236,7 @@ node_modules
 !/client/web/build/*
 ```
 
-I had to modify the .gitignore file so that the Hathora client dependencies can get pushed to the repot. These files are imported into your index.ts file, so you have to give access to the hosting service.
+I had to modify the .gitignore file so that the Hathora client dependencies can get pushed to the repo. These files are imported into your index.ts file, so you have to give access to the hosting service.
 
 ### :computer: Netlify - Frontend
 
