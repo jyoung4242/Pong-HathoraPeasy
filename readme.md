@@ -1,11 +1,13 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/bukotsunikki.svg?style=social&label=Follow%20%40jyoung424242)](https://twitter.com/jyoung424242)
 
+Penned by: Justin Young
+
 <h1 align="center">Tutorial for Hathora Back End/Peasy-UI Front End</h1>
 
 # :wave: Introduction to the tutorial
 
-This tutorial was penned to provide a simple example of how the Hathora framework can be utilized to quickly create a multiplayer backend game server.  With that, this tutorial showcases Peasy-UI framework to create a custom UI for the clients to connect to that server.  The game being created for this example is a simple Pong game.  This tutorial uses a state machine, simple physics and collision detection/resolution, and game state.  The game state will be bound to UI components via Peasy-UI.
+This tutorial was penned to provide a simple example of how the Hathora framework can be utilized to quickly create a multiplayer backend game server.  With that, this tutorial showcases Peasy-UI framework to create a custom UI for the clients to connect to that server.  The game being created for this example is a simple Pong game.  This tutorial uses a state machine, simple physics and collision detection/resolution, and game state.  The game state will be bound to UI components via Peasy-UI.  Pong was selected as the game due to its tight scoping for scale,  however, we get to exercise some great game dev concepts even with this limited scope that can be applied to larger scoped projects!
 
 ## :clipboard: Table of Contents (Links)
 
@@ -34,13 +36,19 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
     -   [Where to Find](#where-to-find-1)
     -   [Data Bindings](#data-bindings)
     -   [Custom UI](#custom-ui-overview)
--   [Tutorial Workflow](#tutorial-workflow)
-    -   [Creating client project](#creating-custom-ui-project-in-hathora-framework)
-    -   [Installing and importing Peasy-UI](#installing-and-importing-peasy-ui)
-    -   [String Template and Data Model](#creating-string-template-and-data-model)
-    -   [Creating Data Bindings](#creating-data-bindings)
-    -   [Connecting the Client](#connecting-the-client)
-    -   [Remote Procedure Calls](#remote-procedure-calls)
+    -   [Tutorial Workflow](#tutorial-workflow)
+        -   [Creating client project](#creating-custom-ui-project-in-hathora-framework)
+        -   [Installing and importing Peasy-UI](#installing-and-importing-peasy-ui)
+        -   [String Template and Data Model](#creating-string-template-and-data-model)
+        -   [Creating Data Bindings](#creating-data-bindings)
+        -   [Connecting the Client](#connecting-the-client)
+        -   [Remote Procedure Calls](#remote-procedure-calls)
+        -   [Adding Logic to Game Elements](#adding-logic-to-the-game-elements)
+    -   [Wrapping up the project](#wrap-up-of-test-project)
+-   [Deployment](#deployment)
+    -   [Front End](#netlify---frontend)
+    -   [Back End](#self-hosted-backend)
+        -   [Cloud based hosting](#cloud-hosting)
 
 ## :trophy: End Objective
 
@@ -1045,36 +1053,128 @@ This method can be called after the joinGame method is called.  This connects th
 
 ##### Adding logic to the game elements
 
-Okay, that’s quite a bit of stuff.  We have our UI bindings, the HTML framework, the RPC’s, our client is connected to the server, all that’s left is now getting the information OUT of the server so our UI can use it.  This is the client state that the impl.ts file calls out.  Remember that updateState() method we defined a long time ago?  That’s the connection for how the data is going to come out of the server when the data changes.
-Tying in the server data via updateState()
-Earlier we created a method call updateState() that we left empty.  Now its time to fill it out and review what is going on.
- 
-This routine runs whenever the server state changes, and that creates a remapping of the client state on the server side, and that state gets pushed, or broadcasted, out to each connected client.  It arrives via UpdateArgs parameter, called update, in this routine.  There are two aspects of the update object that we are going to leverage, state and events.
-Update.state is the client state being pushed from the server, and we simply take the important properties of that object and store it into our data model.  The act of doing this will force Peasy-UI to respond to any changes in the data and update our UI automatically.
-Update.events is the Hathora event system, and this array holds a list of the events that have been fired off from the server.  We have four events outlined in our server code, Players joining, P1 and P2, the Ball being ready to display, and Game Over.
-Wrap up of test project
-We’ve reviewed about 96% of the code, please refer to the project repo for the miscellaneous lines of code not reviewed, as well as the helper functions that are imported.   This completes the project at a local level, let’s talk deployment.
+Okay, that’s quite a bit of stuff.  We have our UI bindings, the HTML framework, the RPC’s, our client is connected to the server, all that’s left is now getting the information OUT of the server so our UI can use it.  
 
-Deployment
-So how do we push our local project out to the world for others to see?  There are many, many different paths to take.
-For this tutorial, I am using Netlify to push the front end out into the world, and I am self-hosting my server on a dedicated machine.  However, there are cloud-based options for deploying the backend.
-Building
-For the front end, I simply changed directory in /client/web/ in my project, and ran the webpack build:
+This is the client state that the impl.ts file calls out.  Remember that updateState() method we defined a long time ago?  That’s the connection for how the data is going to come out of the server when the data changes.
+
+##### Tying in the server data via updateState()
+
+Earlier we created a method call updateState() that we left empty.  Now its time to fill it out and review what is going on.
+
+```ts
+let updateState = (update: UpdateArgs) => {
+    //updating state
+    model.player1pos = update.state.player1position;
+    model.player2pos = update.state.player2position;
+    model.ball = update.state.ballposition;
+    model.p1Lives = update.state.player1Lives;
+    model.p2Lives = update.state.player2Lives;
+    //process events
+    if (update.events.length) {
+        update.events.forEach(event => {
+            switch (event) {
+                case 'P2':
+                    model.player2Joined = true;
+                    model.player1Joined = true;
+                    model.startButtonDisable = false;
+                    break;
+                case 'P1':
+                    model.player1Joined = true;
+                    break;
+                case 'Ball':
+                    model.ballvisible = true;
+                    model.startButtonDisable = true;
+                    break;
+                case 'Game Over':
+                    model.ballvisible = false;
+                    model.player2Joined = false;
+                    model.player1Joined = false;
+                    alert('Game Over');
+                    break;
+            }
+        });
+    }
+};
+
+```
  
-This creates a /build/ directory under our web client.  There will be an html file and a bundled JavaScript file.  These files can be pushed to a GitHub repo project now.   We will be using our GitHub accounts to push our projects to a webhosting service, Netlify.   Many of these service providers create plugins for their tools to easily connect to GitHub repo’s.  A special note for this is that the server data is being built into the client.ts and base.ts files from where you are building.  Steps should be taken to make sure the appID called out for the coordinator matches the server target.
-.gitignore
+This routine runs whenever the server state changes, and that creates a remapping of the client state on the server side, and that state gets pushed, or broadcasted, out to each connected client.  
+
+It arrives via UpdateArgs parameter, called update, in this routine.  There are two aspects of the update object that we are going to leverage, state and events.
+
+Update.state is the client state being pushed from the server, and we simply take the important properties of that object and store it into our data model.  The act of doing this will force Peasy-UI to respond to any changes in the data and update our UI automatically.
+
+Update.events is the Hathora event system, and this array holds a list of the events that have been fired off from the server.  We have four events outlined in our server code, Players joining, P1 and P2, the Ball being ready to display, and Game Over.
+
+#### Wrapping up the project
+
+We’ve reviewed about 96% of the code, please refer to the project repo for the miscellaneous lines of code not reviewed, as well as the helper functions that are imported.   This completes the project at a local level.  Finally, let’s talk deployment.
+
+## Deployment
+
+So how do we push our local project out to the world for others to see?  There are many, many different paths to take.
+
+For this tutorial, I am using Netlify to push the front end out into the world, and I am self-hosting my server on a dedicated machine.  However, there are cloud-based options for deploying the backend.
+
+### Building
+
+For the front end, I simply changed directory in /client/web/ in my project, and ran the webpack build:
+
+```bash
+npm run build
+```
+ 
+This creates a /build/ directory under our web client.  There will be an html file and a bundled JavaScript file.  These files can be pushed to a GitHub repo project now.   We will be using our GitHub accounts to push our projects to a webhosting service, Netlify.  
+
+ Many of these service providers create plugins for their tools to easily connect to GitHub repo’s.  A special note for this is that the server data is being built into the client.ts and base.ts files from where you are building.  Steps should be taken to make sure the appID called out for the coordinator matches the server target.
+
+#### .gitignore
+
+```
+#.hathora
+/server/.hathora/*
+
+/client/.hathora/*
+!/client/.hathora/client.ts
+
+node_modules
+#dist
+!/tutorial/*
+
+.env
+/api/*
+!/api/base.ts
+/data/*
+!/data/saves
+/client/prototype-ui/*
+!/client/prototype-ui/plugins
+/client/web/webpackstarter.bat
+/client/web/node_modules
+!/client/web/build/*
+```
+
 I had to modify the .gitignore file so that the Hathora client dependencies can get pushed to the repot.  These files are imported into your index.ts file, so you have to give access to the hosting service.
  
+### Netlify -  Frontend
 
-Netlify -  Frontend
 Please refer to the expansive amount of Netlify documentation regarding creating an account with their service.  There is a free level of service provided with Netlify.
-Once your account is created you can create a new site to your account.  They have a one-click deploy feature that lets the Netlify build tools clone your GitHub repo, then package it up and launch the site live automatically.  There was a little bit of configuration in the build step to be successful.  First, I recommend changing the domain settings to a site name that makes more sense, I used Hathor-peasy-pong.netlify.app.
+
+Once your account is created you can create a new site to your account.  They have a one-click deploy feature that lets the Netlify build tools clone your GitHub repo, then package it up and launch the site live automatically.  There was a little bit of configuration in the build step to be successful.  
+
+First, I recommend changing the domain settings to a site name that makes more sense, I used Hathor-peasy-pong.netlify.app.
+
 The final step is setting up the deployment settings.  If you’ve tied your GitHub repo to this site, then you will fill out the build settings as such.  We have two static files, so there are no necessary build steps to spell out.
+
+![Netlify Config](/tutorial/screenshots/ss21.png)
  
 After this is setup, you can go to the deploy page for your site and trigger a deployment.  The site should go live after that.
  
+![Real life website!](/tutorial/screenshots/ss22.png)
+
 Congratulations, you just made a real-life website with a multiplayer game on it!!!!
-Self-Hosted Backend
+
+### Self-Hosted Backend
+
 To get this running on my dedicated machine at home, I simply recreated the project locally, and executed to fire up my service:
  
 Now the service is running on my dedicated machine, and it can connect to the Hathora Coordinator via the internet. 
@@ -1083,5 +1183,32 @@ To push to a hosting cloud service like , change your directory back to the proj
  
 This will run a vite script that bundles and packages up your server into a index.mjs file that’s located at /server/dist/.  This file, can be pushed to a hosting service.  From the Hathora Docs:
  
-Cloud Hosting
+#### Cloud Hosting
+
 Hathora is positioning themselves to be able to host your backend application as well.  You can have an account created with Hathora, and then use the ‘hathora deploy’ command and your application will be automatically pushed to the cloud and running.  Please see the Hathora Docs and reach out to the team directly for more information.
+
+## Summary
+
+This was a lot!
+
+Let's review what we accomplished.
+
+From scratch:
+    - we created a backend, multiplayer server using Hathora
+    - we created a stand alone client using Peasy-UI, that connects to our server
+    - we deployed both into the wild!
+
+### Questions, Comments, or Concerns
+
+That's it for today, I hope you liked the tools, and enjoyed this application of some neat concepts.
+
+I'd love to hear feedback on how I can make this easier to understand.  The easiest way to reach me is on the Discord server for which I assist in moderating.
+
+[Game Dev Shift](https://discord.gg/xZAem8Eb)
+My handle is Mookie, and you can give me a holler over there, we have a whole channel for #code-help and everyone there is super friendly and willing to jump in and assist.
+
+At the top of this post, is my twitter handle, you can dm me there as well.  We'd love for you to share your game dev creations with us on the discord Server.
+
+Good Luck, and Good Coding.  
+
+Justin
