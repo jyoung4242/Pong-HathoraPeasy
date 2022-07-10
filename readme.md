@@ -327,10 +327,10 @@ To compile and run any updates….
 Just as an example, you can put a console.log() in your impl.ts file and recompile your server.  My recommendation is to stick the console.log in the updatePlayerVelocity method.
 
 ```ts
-console.log(`UpdatePlayerVelocity has been clicked with ${request.velocity}, passed by ${userID}`);
+console.log(`UpdatePlayerVelocity has been clicked with ${request.velocity.x},${request.velocity.y} , passed by ${userId}`);
 ```
 
-And then click the updatePlayerPosition button with some data in it and see what happens in your server console.
+And then click the updatePlayerVelocity button with some data in it and see what happens in your server console.
  
 ![console shot](/tutorial/screenshots/ss16.png)
 
