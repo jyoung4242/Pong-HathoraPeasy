@@ -36,6 +36,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 - [Peasy-UI](#poutingcat-peasy-ui-front-end)
   - [Where to Find](#where-to-find-1)
   - [Data Bindings](#chartwithupwardstrend-data-bindings)
+  - [UI.Update](#uiupdate)
   - [Custom UI](#art-custom-ui-overview)
   - [Tutorial Workflow](#clipboard-tutorial-workflow)
     - [Creating client project](#creating-custom-ui-project-in-hathora-framework)
