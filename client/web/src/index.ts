@@ -1,9 +1,9 @@
-import './style.css';
-import { UI, UIView } from 'peasy-ui';
-import { HathoraClient, HathoraConnection, UpdateArgs } from '../../.hathora/client';
-import { AnonymousUserData } from '../../../api/base';
+import "./style.css";
+import { UI, UIView } from "peasy-ui";
+import { HathoraClient, HathoraConnection, UpdateArgs } from "../../.hathora/client";
+import { AnonymousUserData } from "../../../api/base";
 
-const myApp = document.getElementById('myApp');
+const myApp = document.getElementById("myApp");
 let intervalID: NodeJS.Timer;
 
 /**********************************************************
@@ -28,37 +28,37 @@ let myConnection: HathoraConnection;
  *********************************************************/
 
 let updateState = (update: UpdateArgs) => {
-    //updating state
-    model.player1pos = update.state.player1position;
-    model.player2pos = update.state.player2position;
-    model.ball = update.state.ballposition;
-    model.p1Lives = update.state.player1Lives;
-    model.p2Lives = update.state.player2Lives;
-    //process events
-    if (update.events.length) {
-        update.events.forEach(event => {
-            switch (event) {
-                case 'P2':
-                    model.player2Joined = true;
-                    model.player1Joined = true;
-                    model.startButtonDisable = false;
-                    break;
-                case 'P1':
-                    model.player1Joined = true;
-                    break;
-                case 'Ball':
-                    model.ballvisible = true;
-                    model.startButtonDisable = true;
-                    break;
-                case 'Game Over':
-                    model.ballvisible = false;
-                    model.player2Joined = false;
-                    model.player1Joined = false;
-                    alert('Game Over');
-                    break;
-            }
-        });
-    }
+  //updating state
+  model.player1pos = update.state.player1position;
+  model.player2pos = update.state.player2position;
+  model.ball = update.state.ballposition;
+  model.p1Lives = update.state.player1Lives;
+  model.p2Lives = update.state.player2Lives;
+  //process events
+  if (update.events.length) {
+    update.events.forEach((event) => {
+      switch (event) {
+        case "P2":
+          model.player2Joined = true;
+          model.player1Joined = true;
+          model.startButtonDisable = false;
+          break;
+        case "P1":
+          model.player1Joined = true;
+          break;
+        case "Ball":
+          model.ballvisible = true;
+          model.startButtonDisable = true;
+          break;
+        case "Game Over":
+          model.ballvisible = false;
+          model.player2Joined = false;
+          model.player1Joined = false;
+          alert("Game Over");
+          break;
+      }
+    });
+  }
 };
 
 /**********************************************************
@@ -67,46 +67,46 @@ let updateState = (update: UpdateArgs) => {
  * the down arrow, and the spacebar
  *********************************************************/
 const bindKeyboardEvents = () => {
-    document.addEventListener('keydown', e => {
-        switch (e.key) {
-            case 'ArrowUp':
-                /**********************************************************
-                 * Hathora: remote procedure call (RPC)
-                 * runs the updatePlayerVelocity method that's on the server
-                 * and passes a velocity Vector to the method
-                 *********************************************************/
-                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
-                break;
-            case 'ArrowDown':
-                //ditto
-                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
-                break;
-            case ' ':
-                /**********************************************************
-                 * Hathora: remote procedure call (RPC)
-                 * runs the startRound method that's on the server
-                 *********************************************************/
-                myConnection.startRound({});
-                break;
-            default:
-                break;
-        }
-    });
-    document.addEventListener('keyup', e => {
-        switch (e.key) {
-            case 'ArrowUp':
-                //ditto
-                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
-                break;
-            case 'ArrowDown':
-                //ditto
-                myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
-                break;
+  document.addEventListener("keydown", (e) => {
+    switch (e.key) {
+      case "ArrowUp":
+        /**********************************************************
+         * Hathora: remote procedure call (RPC)
+         * runs the updatePlayerVelocity method that's on the server
+         * and passes a velocity Vector to the method
+         *********************************************************/
+        myConnection.updatePlayerVelocity({ velocity: { x: 0, y: -15 } });
+        break;
+      case "ArrowDown":
+        //ditto
+        myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 15 } });
+        break;
+      case " ":
+        /**********************************************************
+         * Hathora: remote procedure call (RPC)
+         * runs the startRound method that's on the server
+         *********************************************************/
+        myConnection.startRound({});
+        break;
+      default:
+        break;
+    }
+  });
+  document.addEventListener("keyup", (e) => {
+    switch (e.key) {
+      case "ArrowUp":
+        //ditto
+        myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+        break;
+      case "ArrowDown":
+        //ditto
+        myConnection.updatePlayerVelocity({ velocity: { x: 0, y: 0 } });
+        break;
 
-            default:
-                break;
-        }
-    });
+      default:
+        break;
+    }
+  });
 };
 
 /**********************************************************
@@ -154,121 +154,121 @@ const template = `
  * and events for the string template
  *********************************************************/
 const model = {
-    /**********************************************************
-     * Hathora: loginAnonymous() and getUserFromToken() methods
-     * this uses sessionStorage for the browser to store token
-     * if token doesn't exist, it logs into Hathora coordinator
-     * and creates new access token
-     *********************************************************/
-    login: async (event, model) => {
-        if (sessionStorage.getItem('token') === null) {
-            sessionStorage.setItem('token', await client.loginAnonymous());
-        }
-        token = sessionStorage.getItem('token');
-        user = HathoraClient.getUserFromToken(token);
-        model.username = user.name;
-        model.createButtonDisable = false;
-        model.connectButtonDisable = false;
-    },
-    /**********************************************************
-     * Hathora: create() and connect() methods
-     * this is called when the create new game button is pressed
-     * and creates a new game instance from the Hathora server
-     * then subsequently runs the connect method, establishing
-     * the myConnection object, which we use to communicate
-     * between the client and the server
-     *********************************************************/
-    create: async (event, model) => {
-        model.gameID = await client.create(token, {});
-        model.title = model.gameID;
-        history.pushState({}, '', `/${model.gameID}`);
-        myConnection = await client.connect(token, model.gameID);
+  /**********************************************************
+   * Hathora: loginAnonymous() and getUserFromToken() methods
+   * this uses sessionStorage for the browser to store token
+   * if token doesn't exist, it logs into Hathora coordinator
+   * and creates new access token
+   *********************************************************/
+  login: async (event, model) => {
+    if (sessionStorage.getItem("token") === null) {
+      sessionStorage.setItem("token", await client.loginAnonymous());
+    }
+    token = sessionStorage.getItem("token");
+    user = HathoraClient.getUserFromToken(token);
+    model.username = user.name;
+    model.createButtonDisable = false;
+    model.connectButtonDisable = false;
+  },
+  /**********************************************************
+   * Hathora: create() and connect() methods
+   * this is called when the create new game button is pressed
+   * and creates a new game instance from the Hathora server
+   * then subsequently runs the connect method, establishing
+   * the myConnection object, which we use to communicate
+   * between the client and the server
+   *********************************************************/
+  create: async (event, model) => {
+    model.gameID = await client.create(token, {});
+    model.title = model.gameID;
+    history.pushState({}, "", `/${model.gameID}`);
+    myConnection = await client.connect(token, model.gameID);
 
-        myConnection.onUpdate(updateState);
-        myConnection.onError(console.error);
-        //manage UI access
-        model.joinButtonDisable = false;
-        model.createButtonDisable = true;
-        model.connectButtonDisable = true;
-    },
-    /**********************************************************
-     * Hathora: connect() methods
-     * runs the connect method, establishing
-     * the myConnection object, which we use to communicate
-     * between the client and the server
-     *********************************************************/
-    connect: async (event, model) => {
-        myConnection = await client.connect(token, model.gameID);
+    myConnection.onUpdate(updateState);
+    myConnection.onError(console.error);
+    //manage UI access
+    model.joinButtonDisable = false;
+    model.createButtonDisable = true;
+    model.connectButtonDisable = true;
+  },
+  /**********************************************************
+   * Hathora: connect() methods
+   * runs the connect method, establishing
+   * the myConnection object, which we use to communicate
+   * between the client and the server
+   *********************************************************/
+  connect: async (event, model) => {
+    myConnection = await client.connect(token, model.gameID);
 
-        model.title = `-> Game ID: ${model.gameID}`;
-        history.pushState({}, '', `/${model.gameID}`);
-        myConnection.onUpdate(updateState);
-        myConnection.onError(console.error);
-        //manage UI access
-        model.joinButtonDisable = false;
-        model.createButtonDisable = true;
-        model.connectButtonDisable = true;
-    },
+    model.title = `-> Game ID: ${model.gameID}`;
+    history.pushState({}, "", `/${model.gameID}`);
+    myConnection.onUpdate(updateState);
+    myConnection.onError(console.error);
+    //manage UI access
+    model.joinButtonDisable = false;
+    model.createButtonDisable = true;
+    model.connectButtonDisable = true;
+  },
 
-    /**********************************************************
-     * Hathora: remote procedure call (RPC)
-     * runs the joinGame method that's on the server
-     *********************************************************/
-    join: (event, model) => {
-        myConnection.joinGame({});
-        bindKeyboardEvents();
-        //manage UI access
-        model.joinButtonDisable = true;
-    },
+  /**********************************************************
+   * Hathora: remote procedure call (RPC)
+   * runs the joinGame method that's on the server
+   *********************************************************/
+  join: (event, model) => {
+    myConnection.joinGame({});
+    bindKeyboardEvents();
+    //manage UI access
+    model.joinButtonDisable = true;
+  },
 
-    /**********************************************************
-     * Hathora: remote procedure call (RPC)
-     * runs the startGame method that's on the server
-     *********************************************************/
-    start: (event, model) => {
-        myConnection.startGame({});
-        //manage UI access
-        model.startButtonDisable = true;
-    },
-    //copies input text to clipboard
-    copy: () => {
-        navigator.clipboard.writeText(model.gameID);
-    },
+  /**********************************************************
+   * Hathora: remote procedure call (RPC)
+   * runs the startGame method that's on the server
+   *********************************************************/
+  start: (event, model) => {
+    myConnection.startGame({});
+    //manage UI access
+    model.startButtonDisable = true;
+  },
+  //copies input text to clipboard
+  copy: () => {
+    navigator.clipboard.writeText(model.gameID);
+  },
 
-    /**********************************************************
-     * Peasy-UI: data bindings
-     * these values are tied into the UI specifically
-     * either data fields like title, p1Lives, and gameID
-     * or CSS values, like player2pos
-     * or attributes for visibility and disabled of the UI
-     * buttons.  Also shown is the ability to abstract the
-     * evaluation of the booleans using a getter, such as the
-     * login button disable code below
-     *********************************************************/
-    title: '',
-    gameID: '',
-    username: '',
-    player1pos: { x: 15, y: 10 },
-    player2pos: { x: 575, y: 10 },
-    ball: { x: 25, y: 25 },
-    p1Lives: 3,
-    p2Lives: 3,
-    get loginButtonDisable() {
-        return this.username.length > 0;
-    },
-    get showID() {
-        return this.gameID.length > 0;
-    },
-    get showUser() {
-        return this.username.length > 0;
-    },
-    createButtonDisable: true,
-    connectButtonDisable: true,
-    joinButtonDisable: true,
-    startButtonDisable: true,
-    player1Joined: false,
-    player2Joined: false,
-    ballvisible: false,
+  /**********************************************************
+   * Peasy-UI: data bindings
+   * these values are tied into the UI specifically
+   * either data fields like title, p1Lives, and gameID
+   * or CSS values, like player2pos
+   * or attributes for visibility and disabled of the UI
+   * buttons.  Also shown is the ability to abstract the
+   * evaluation of the booleans using a getter, such as the
+   * login button disable code below
+   *********************************************************/
+  title: "",
+  gameID: "",
+  username: "",
+  player1pos: { x: 15, y: 10 },
+  player2pos: { x: 575, y: 10 },
+  ball: { x: 25, y: 25 },
+  p1Lives: 3,
+  p2Lives: 3,
+  get loginButtonDisable() {
+    return this.username.length > 0;
+  },
+  get showID() {
+    return this.gameID.length > 0;
+  },
+  get showUser() {
+    return this.username.length > 0;
+  },
+  createButtonDisable: true,
+  connectButtonDisable: true,
+  joinButtonDisable: true,
+  startButtonDisable: true,
+  player1Joined: false,
+  player2Joined: false,
+  ballvisible: false,
 };
 
 /**********************************************************
@@ -285,19 +285,6 @@ myUI = UI.create(myApp, template, model);
  * changes in state and then automatically updates the UI
  * with the new data, recommened to be called on interval
  *********************************************************/
-/* intervalID = setInterval(() => {
-    UI.update();
-}, 1000 / 60); */
-let startTime;
-const uiUpdate = deltaTime => {
-    if (startTime === undefined) {
-        startTime = deltaTime;
-    }
-    const elapsed = deltaTime - startTime;
-    if (elapsed >= 100) {
-        startTime = deltaTime;
-        UI.update();
-    }
-    window.requestAnimationFrame(uiUpdate);
-};
-window.requestAnimationFrame(uiUpdate);
+intervalID = setInterval(() => {
+  UI.update();
+}, 1000 / 60);

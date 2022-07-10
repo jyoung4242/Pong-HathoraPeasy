@@ -341,7 +341,7 @@ const paddlespeed = 20;
 let vollies = 0;
 ```
 
-And another reminder, that this tutorial does not cover the project line by line, so please reference the GitHub repo for the working source code, the impl.ts and index.ts code for both the server and client are fully completed and fully commented in the repo. Also, you will find that the impl.ts file imports a helper.ts file, which is provided in the GitHub repo, and the client index.ts file uses styles.css, which is provide in the repo as well.
+:warning: And another reminder, that this tutorial does not cover the project line by line, so please reference the GitHub repo for the working source code, the impl.ts and index.ts code for both the server and client are fully completed and fully commented in the repo. Also, you will find that the impl.ts file imports a helper.ts file, which is provided in the GitHub repo, and the client index.ts file uses styles.css, which is provide in the repo as well.
 
 [GitHub Repo](http://github.com/jyoung4242/Pong-HathoraPeasy)
 
@@ -676,6 +676,22 @@ ${ === prop}        Binding that renders the element if model property is true
 ${ !== prop}        Binding that renders the element if model property is false
 
 ${alias <=* list}   Binding from model list property to view template alias for each item in the list
+```
+
+#### UI.update()
+
+The primary method that is required to trigger the UI engine to conduct comparisons on your model data object, and to push updates to the UI binding templates is UI.update().
+
+There are a couple ways to implement this. You can force a UI.update() after an event, like a button press, this will be an immediate UI update.
+
+Also, for games that use a RequestAnimationFrame method, you can place the UI.update() inside that, and can be especially effective with a Fixed Step Engine pattern implemented in your RAF recursive call.
+
+For the sake of this demo, I simply have placed it inside a setInterval method. That way i don't have to even think about managing the UI.
+
+```ts
+intervalID = setInterval(() => {
+  UI.update();
+}, 1000 / 60);
 ```
 
 #### :art: Custom UI overview
