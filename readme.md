@@ -324,10 +324,10 @@ hathora start
 
 To compile and run any updates….  
 
-Just as an example, you can put a console.log() in your impl.ts file and recompile your server.
+Just as an example, you can put a console.log() in your impl.ts file and recompile your server.  My recommendation is to stick the console.log in the updatePlayerVelocity method.
 
 ```ts
-console.log(`UpdatePlayerPosition has been clicked with ${request.yPosition}, passed by ${userID}`);
+console.log(`UpdatePlayerVelocity has been clicked with ${request.velocity}, passed by ${userID}`);
 ```
 
 And then click the updatePlayerPosition button with some data in it and see what happens in your server console.
@@ -335,6 +335,8 @@ And then click the updatePlayerPosition button with some data in it and see what
 ![console shot](/tutorial/screenshots/ss16.png)
 
 This demonstrates how these methods get called, and how you have access to the data objects being passed from each client.
+
+NOTE: after you start a game instance, the url will append the game instance id onto the end of your URL.  If you recompile or restart your server, you will get a connection error in this manner.  Either hit your back button, or just restart a new browser connection to http://localhost/3000.
 
 #### :factory: Filling in the rest of the server logic
 
