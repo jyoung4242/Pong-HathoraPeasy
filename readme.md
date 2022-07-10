@@ -20,7 +20,7 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
     -   [Where to Find](#where-to-find)
     -   [Workflow](#constructionworker-workflow)
     -   [Project Folder Setup](#scroll-project-setup)
-    -   [Hathora YML](#bookmarktabs-yml)
+    -   [Hathora YML](#)
     -   [Hathora Init](#clapper-generating-hathora-project)
     -   [IMPL.ts file](#bookmarktabs-implts)
     -   [Prototype UI client](#crossedflags-prototype-test-client)
@@ -131,21 +131,14 @@ Should spit out whichever version was latest greatest.  If an error comes up reg
 
 ```
 'hathora' is not recognized as an internal or external command,
-operable program or batch file.``` 
+operable program or batch file.
+``` 
 
 means that it is possible that the -g flag for installing hathora was left off.  Hathora has to be installed globally for the Command Line Interface commands to work.
- 
+
 #### :bookmark_tabs: YML
 
-The hathora.yml is a critically important file.  A “yaml” file is a human-readable data-serialization language. 
-
-According to Wikipedia:  
-
-```
-It is commonly used for configuration files and in applications where data is being stored or transmitted. 
-
-YAML targets many of the same communications applications as Extensible Markup Language (XML)…
-```
+The hathora.yml is a critically important file.  A “yaml” file is a human-readable data-serialization language.  Its used for configuration files similar as to a more well known, XML file is.
 
 Before Hathora, I didn’t know what a YML file was, so… this was all new to me.
 We must outline out what our YML file needs to look like before we ask Hathora to build the project structure.  Hathora parses the YML file, and builds the backend server template, the prototype UI, and provides the end path for your custom front end client when it builds the project.
@@ -155,34 +148,10 @@ These sections will have to be addressed prior to asking Hathora to parse it.
 
 ![Beginning YML file](/tutorial/screenshots/ss2.png)
 
-Types (from the docs)
+I am going to link directly to the Hathora docs on YML, as they outline each section specifically on what it does and how it should be addressed.
 
-![Types Docs](/tutorial/screenshots/ss3.png)
+[Hathora Docs - YML](https://docs.hathora.dev/#/hathora-yml)
 
-Methods (from the docs)
-
-![Methods Docs](/tutorial/screenshots/ss4.png)
-
-Auth (from the docs)
-
-![Authentication Docs](/tutorial/screenshots/ss5.png)
- 
-userState (from the docs)
- 
-![userState Docs](/tutorial/screenshots/ss6.png)
- 
-initializeArgs (from the docs) – for this tutorial we will not be using this
- 
-![initializeArgs Docs](/tutorial/screenshots/ss7.png)
- 
-Error (from the docs)
- 
-![Error Docs](/tutorial/screenshots/ss8.png)
- 
-Tick (from the docs)
- 
-![Tick Docs](/tutorial/screenshots/ss9.png)
- 
 So… given that information, I’m outlining that our hathora.yml will be defined initially as follows:
 
 ```yml
@@ -246,7 +215,7 @@ Player type will outline all the characteristics of each player that connects, i
 
 The Player State type is important, as we separate the collective state that the server monitors from what data is broadcast to each client on change.  So, each client will understand and be able to monitor changes in the balls’ entities, and the players’ entities.  When the Server state data changes, the data gets remapped into Player State prior to being pushed to clients.  The reason we seperate the overall Server state from the Player state is that there ususually is data that the Server monitors for state changes that we don't want each client to see.  A good example is a game of Poker;  the server needs to monitor ALL the players hands, but only needs to broadcast to each client their respective hand data.  This took me awhile to understand, but there's two aspects to this, we should ONLY send he minimum amount of data to the client that it needs to operate, and we shouldn't burden the client with data that should be hidden, and then expect the client code to do the sorting.
 
-There are four methods we’re defining for this, updatePlayerPosition, joinGame, startRound and startGame.
+There are four methods we’re defining for this, updatePlayerVelocity, joinGame, startRound and startGame.
 
 These will generate remote procedure calls for the clients to execute and communicate events to the server.
 
@@ -259,8 +228,6 @@ Let’s try generating our Hathora project off this YAML.   In the PowerShell te
  ```bash
  hathora init
  ```
-
-
 
 Now your project in the explorer should look a bit like this:
 
