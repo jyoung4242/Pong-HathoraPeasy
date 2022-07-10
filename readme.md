@@ -254,7 +254,7 @@ This is the main code that is used for your server. You can import and include o
 
 I’m now going to introduce you to the prototype UI client tool which is provided by Hathora. We can use this tool to quickly iterate over the server logic in the impl.ts file. This section will show the UI and its interface but know that we will be using it to fill out the server code.
 
-Important note on Prototype Test Client, it is crafted in React, which creates on limitation to consider for your hathora.yml file. All Types that will need to be rendered in the Test Client will have to start with a capital letter. Please... learn from my mistakes.
+:warning: Important note on Prototype Test Client, it is crafted in React, which creates one limitation to consider for your hathora.yml file. All Types that will need to be rendered in the Test Client will have to start with a capital letter. Please... learn from my mistakes.
 
 ```yml
 Player:
