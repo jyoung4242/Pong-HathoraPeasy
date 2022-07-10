@@ -49,6 +49,8 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
     -   [Front End](#netlify---frontend)
     -   [Back End](#self-hosted-backend)
         -   [Cloud based hosting](#cloud-hosting)
+-   [Summary](#summary)
+    -   [Questions, Comments, Concerns](#questions-comments-or-concerns)
 
 ## :trophy: End Objective
 
