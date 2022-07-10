@@ -699,7 +699,7 @@ intervalID = setInterval(() => {
 
 This isn't needed for this tutorial, but if you are routing to different UI models, like mimicing a SPA application that has routing, you have to unload your UI model before switching.
 
-This can simply be done by calling UI.destroy(); Here i use it in context of leaving one scene and transitioning to another. I run ui.destroy(), then null out UI, then stop my interval from updateing UI.update().
+This can simply be done by calling UI.destroy(). Here i use it in context of leaving one scene and transitioning to another. I run ui.destroy(), then null out UI, then stop my interval from updating UI.update().
 
 ```ts
 leaving() {
