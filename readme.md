@@ -120,7 +120,20 @@ Open the terminal window in the editor, CTRL + J, will work as the shortcut. Her
 npm install -g hathora
 ```
  
-This will install the Hathora NPM package from the internet.  After that installation is complete, we will create a new file, hathora.yml, in the root of our new project folder.
+This will install the Hathora NPM package from the internet.  After that installation is complete, we will create a new file, hathora.yml, in the root of our new project folder.  One thing we should verify here is that hathora has installed correctly.  
+
+Enter into the PowerShell terminal: 
+
+```shell
+hathora --version
+```
+Should spit out whichever version was latest greatest.  If an error comes up regarding hathora not being:
+
+```
+'hathora' is not recognized as an internal or external command,
+operable program or batch file.``` 
+
+means that it is possible that the -g flag for installing hathora was left off.  Hathora has to be installed globally for the Command Line Interface commands to work.
  
 #### :bookmark_tabs: YML
 
@@ -247,6 +260,8 @@ Let’s try generating our Hathora project off this YAML.   In the PowerShell te
  hathora init
  ```
 
+
+
 Now your project in the explorer should look a bit like this:
 
 ![Hathora Project Structure](/tutorial/screenshots/ss10.png)
@@ -272,6 +287,8 @@ From the PowerShell terminal, type:
 ```bash
 hathora dev
 ```
+
+When you run this command, Hathora will install a couple dependencies onto your system, and will use Vite utiltiy to run the test client.
 
 Congratulations, you have a client/server setup running!  Yay!
 
