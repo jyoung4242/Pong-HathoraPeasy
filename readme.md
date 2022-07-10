@@ -57,13 +57,24 @@ This tutorial was penned to provide a simple example of how the Hathora framewor
 The end state for this tutorial is a deployed client on Netlify that runs the client code that connects to the Hathora backend server.   It takes two players who can join the game, and each player has three lives.  The ball bounces around until it leaves the screen on either side, and that player loses a life each time.  When all the lives are gone, the game ends. 
 
 ## Tools
+
 ### Hathora
+
 Hathora is a multiplayer networking framework that manages much of the low-level duties that otherwise would have to be managed.  Use cases for Hathora include turn-based games, real-time multiplayer games, and social applications such as chatting.  Hathora manages the networking and remote procedure calls, provides a prototyping UI client, and provides a full API that abstracts away much of the low-level work.
+
 ### Peasy-UI
+
 Peasy-UI is a UI data binding Library. Peasy UI provides uncomplicated UI bindings for HTML via string templating. It's intended to be used in vanilla JavaScript/Typescript projects where using ‘createElement‘ is too cumbersome and adding a complete SPA framework is overkill or simply not desired. Thanks to the small scope of the library, performance is decent.
 
-### Development Environment
-I developed this project and tutorial on a Windows 10 system, utilizing VS code, and executing all terminal commands in the node PowerShell terminal embedded in VS code.  There maybe be nuanced differences between developing on a Mac or Linux system.  Also, if using different shell applications or a different IDE, there may be subtle differences to take note of.
+## Development Environment
+
+I developed this project and tutorial on a Windows 10 system, utilizing VS code, and executing all terminal commands in the node PowerShell terminal embedded in VS code.  There maybe be nuanced differences between developing on a Mac or Linux system.  Also, if using different shell applications or a different IDE, there may be subtle differences to take note of.  Also, my source code is done in Typescript.
+
+## Assumptions on my part
+
+With this tuturial, I have made a few assumptions.  I am assuming you have SOME exposure to Javascript and/or Typescript.  At no point do I explain my code, this isn't a coding tutorial, it is an application tutorial.  I explain the why/what I'm doing from an application perspective, but not explaining why I chose the method or function call that I did.
+
+I assume that you have some inkling about networked games and clients and servers.  We do not dive into the depths of those topics, as we do not need to, as our toolset does a TON of that work for us.  For example, I understand enough about client/servers, networking, and websockets to be considered dangerous.  Yet here I am, penning a tutuorial for multiplayer games.  What a world we live in.   I assume that these are all of my assumptions, with that, let's dive into it.
 
 ## Hathora Backend
 ### Where to find:
