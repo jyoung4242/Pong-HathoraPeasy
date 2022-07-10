@@ -1258,10 +1258,27 @@ Congratulations, you just made a real-life website with a multiplayer game on it
 
 ### :computer: Self-Hosted Backend
 
-To get this running on my dedicated machine at home, I simply recreated the project locally, and executed to fire up my service:
+To get this running on my dedicated machine at home, I simply recreated the project locally, and ran this command:
 
+```shell
+hathora build
+```
+
+This command will compile all your server code into a 'dist' directory under the server folder. In that folder you will find index.mjs. There are some environmental variables that need set, but once you do that and you can call from the command line.
+
+```
+node .server/dist/index.mjs
+```
+
+I highly recommend reviewing the Hathora Documentation on deploying.
+
+[Hathora Deploy Documentation](http://docs.hathora.dev/#/deploy)
+
+To run that service
 Now the service is running on my dedicated machine, and it can connect to the Hathora Coordinator via the internet.
-3rd party hosting service
+
+#### 3rd party hosting service
+
 To push to a hosting cloud service like , change your directory back to the project root. Here you’ll be able to run the Hathora build command:
 
 This will run a vite script that bundles and packages up your server into a index.mjs file that’s located at /server/dist/. This file, can be pushed to a hosting service. From the Hathora Docs:
