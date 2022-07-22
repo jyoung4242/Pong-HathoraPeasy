@@ -370,7 +370,7 @@ initialize(ctx: Context, request: IInitializeRequest): InternalState {
     }
 ```
 
-This let’s you define the default values for player state on the creation of a game instance. If you recall, we defined ServerState as follows:
+The joinGame routine allows us to add new players that are joining the game to be added to the InteralState data structure, by pushing the necessary data submitted into the array.  There's also gaurd conditions that help us control how many players are joining, as well as detection when the game is full and ready to start.
 
 #### joinGame:
 
