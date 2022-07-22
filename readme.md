@@ -370,7 +370,7 @@ initialize(ctx: Context, request: IInitializeRequest): InternalState {
     }
 ```
 
-The joinGame routine allows us to add new players that are joining the game to be added to the InteralState data structure, by pushing the necessary data submitted into the array.  There's also gaurd conditions that help us control how many players are joining, as well as detection when the game is full and ready to start.
+The initialize function is the first function called when the createGame method is ran from the client.  We will simply return the default condition of the InternalState that we defined previously.  In other applications, you may want to setup some default values here for your game, but we have nothing too difficult to manage here.
 
 #### joinGame:
 
